@@ -999,7 +999,7 @@
   /* ── PÁGINA A4 — tamanho e margens ── */
   @page {
     size: A4 portrait;
-    margin: 10mm 12mm 14mm 12mm;
+    margin: 6mm 8mm 8mm 8mm;
   }
 
   @media print {
@@ -1041,12 +1041,17 @@
       margin: 0 auto !important;
       padding: 0 !important;
     }
+    p,
+    li {
+      margin-top: 0.28em !important;
+      margin-bottom: 0.28em !important;
+    }
 
     /* ── 5. HEADER HERO — preservar gradiente sem criar página vazia ── */
     header {
       width: auto !important;
-      margin: 0 0 6mm !important;
-      padding: 10mm 0 8mm !important;
+      margin: 0 0 3.5mm !important;
+      padding: 6mm 0 5mm !important;
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
       break-after: auto !important;
@@ -1055,16 +1060,16 @@
     header::before {
       background: none !important;
     }
-    header h1 { font-size: 23pt !important; }
-    header h1 span { font-size: 11.5pt !important; }
-    .hero-eyebrow { font-size: 9pt !important; }
-    .hero-sub { font-size: 9.8pt !important; max-width: 100% !important; }
+    header h1 { font-size: 20pt !important; }
+    header h1 span { font-size: 10pt !important; }
+    .hero-eyebrow { font-size: 7.5pt !important; }
+    .hero-sub { font-size: 8.5pt !important; max-width: 100% !important; }
 
     /* ── 6. SEÇÕES: COMPACTAS E CONTÍGUAS ── */
     section {
       width: auto !important;
       margin: 0 !important;
-      padding: 6mm 0 5mm !important;
+      padding: 3.5mm 0 3mm !important;
       border-bottom: 0.35pt solid #d6dbe1 !important;
       break-inside: auto;
     }
@@ -1088,75 +1093,88 @@
     .ht-item,
     .ht-content,
     .chk-item,
-    .xray-box,
     .golden-rule,
-    .monitor-alert,
-    .pyramid-wrap,
-    .bowtie-wrap,
-    .degrad-timeline,
-    .swimlane {
+    .monitor-alert {
       break-inside: avoid !important;
       page-break-inside: avoid !important;
     }
 
+    .pyramid-wrap,
+    .bowtie-wrap,
+    .degrad-timeline,
+    .swimlane,
+    .xray-box {
+      break-inside: auto !important;
+      page-break-inside: auto !important;
+    }
+
     /* ── 9. TIPOGRAFIA PARA A4 ── */
-    body    { font-size: 9.6pt !important; line-height: 1.45 !important; }
-    h2      { font-size: 15pt !important; margin-bottom: 5pt !important; }
-    .lead   { font-size: 9.3pt !important; margin-bottom: 8pt !important; }
+    body    { font-size: 8.8pt !important; line-height: 1.3 !important; }
+    h2      { font-size: 13.2pt !important; margin-bottom: 4pt !important; }
+    .lead   { font-size: 8.4pt !important; margin-bottom: 5pt !important; }
     .section-tag { font-size: 8pt !important; }
 
     /* ── 10. GRIDS: GARANTIR 2 COLUNAS EM A4 ── */
-    .stat-row   { grid-template-columns: repeat(3,1fr) !important; gap: 5pt !important; margin-bottom: 8pt !important; }
-    .cards-grid { grid-template-columns: repeat(2,1fr) !important; gap: 5pt !important; }
-    .stat-num   { font-size: 22pt !important; }
-    .card       { box-shadow: none !important; padding: 7pt !important; }
+    .stat-row   { grid-template-columns: repeat(3,1fr) !important; gap: 4pt !important; margin-bottom: 6pt !important; }
+    .cards-grid { grid-template-columns: repeat(2,1fr) !important; gap: 4pt !important; }
+    .stat-num   { font-size: 18pt !important; }
+    .card       { box-shadow: none !important; padding: 5pt !important; }
     .card:hover { transform: none !important; }
-    .card-body p { font-size: 8.5pt !important; }
+    .card-body p { font-size: 7.8pt !important; }
 
     /* ── 11. SWIM LANE: AJUSTES DE FONTE ── */
-    .sl-header { font-size: 7.2pt !important; padding: 6pt 7pt !important; }
-    .sl-cell   { font-size: 8.2pt !important; padding: 6pt !important; }
-    .sl-badge  { font-size: 7pt !important; }
-    .sl-action { font-size: 8.2pt !important; }
-    .sl-decision-row { font-size: 8.2pt !important; padding: 6pt !important; }
+    .sl-header { font-size: 6.4pt !important; padding: 4pt 5pt !important; }
+    .sl-cell   { font-size: 7.2pt !important; padding: 4pt !important; }
+    .sl-badge  { font-size: 6.2pt !important; }
+    .sl-action { font-size: 7.2pt !important; }
+    .sl-decision-row { font-size: 7.2pt !important; padding: 4pt !important; }
 
     /* ── 12. TIMELINE DEGRADAÇÃO: LINHA ÚNICA ── */
     .degrad-timeline { flex-direction: row !important; }
     .dt-phase:hover  { transform: none !important; }
-    .dt-period       { font-size: 11.5pt !important; }
-    .dt-phase-desc   { font-size: 7.8pt !important; }
+    .dt-period       { font-size: 10pt !important; }
+    .dt-phase-desc   { font-size: 7pt !important; }
 
     /* ── 13. TIMELINE HISTÓRICO ── */
-    .ht-content { box-shadow: none !important; font-size: 8.8pt !important; }
-    .ht-causes  { font-size: 8.3pt !important; }
-    .ht-item    { margin-bottom: 8pt !important; }
+    .ht-content { box-shadow: none !important; font-size: 7.9pt !important; }
+    .ht-causes  { font-size: 7.4pt !important; }
+    .ht-item    { margin-bottom: 5pt !important; }
 
     /* ── 14. CHECKLIST ── */
     .chk-item {
       box-shadow: none !important;
       border: 0.5pt solid #ccc !important;
-      font-size: 8.7pt !important;
-      padding: 6pt 8pt !important;
+      font-size: 7.8pt !important;
+      padding: 4pt 6pt !important;
     }
     .chk-item:hover { box-shadow: none !important; }
-    .chk-group-title { font-size: 8pt !important; margin-bottom: 4pt !important; }
-    .checklist-section { margin-bottom: 7pt !important; }
+    .chk-group-title { font-size: 7.2pt !important; margin-bottom: 3pt !important; }
+    .checklist-section { margin-bottom: 5pt !important; }
 
     /* ── 15. CALLOUT / BOX ── */
-    .callout     { margin-bottom: 7pt !important; }
+    .callout     { margin-bottom: 5pt !important; }
     .pyramid-wrap { box-shadow: none !important; }
-    .golden-rule  { box-shadow: none !important; padding: 10pt !important; }
-    .golden-rule-text { font-size: 10.2pt !important; }
+    .golden-rule  { box-shadow: none !important; padding: 7pt !important; }
+    .golden-rule-text { font-size: 8.9pt !important; }
     .xray-box    { box-shadow: none !important; }
     .bt-hazard   { animation: none !important; box-shadow: none !important; }
     .xray-cavity-inner { animation: none !important; }
 
+    .pyramid-title,
+    .bowtie-title,
+    .degrad-title,
+    .checklist-title,
+    .xray-title {
+      margin-bottom: 4pt !important;
+      font-size: 8.4pt !important;
+    }
+
     /* ── 16. FOOTER ── */
     footer {
       width: auto !important;
-      margin: 4mm 0 0 !important;
-      padding: 8pt 0 !important;
-      font-size: 8.5pt !important;
+      margin: 2mm 0 0 !important;
+      padding: 5pt 0 !important;
+      font-size: 7.4pt !important;
     }
 
     /* ── 17. LINKS: SEM URL IMPRESSA ── */
