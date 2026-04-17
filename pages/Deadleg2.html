@@ -287,7 +287,7 @@
   .bowtie-wrap {
     background: #1a1a2e;
     border-radius: var(--radius);
-    padding: 28px 20px;
+    padding: 30px 26px;
     margin-bottom: 36px;
   }
   .bowtie-title {
@@ -300,19 +300,21 @@
     margin-bottom: 18px;
   }
   .bowtie {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
+    display: grid;
+    grid-template-columns: minmax(280px, 430px) 120px;
+    align-items: center;
     justify-content: center;
-    flex-wrap: wrap;
+    gap: 22px;
+    max-width: 640px;
+    margin: 0 auto;
   }
   .bt-side {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    flex: 1;
-    min-width: 180px;
-    max-width: 240px;
+    gap: 9px;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
   }
   .bt-side-label {
     font-size: 10px;
@@ -320,9 +322,10 @@
     letter-spacing: .1em;
     text-transform: uppercase;
     text-align: center;
-    padding: 4px 8px;
+    padding: 5px 10px;
     border-radius: 4px;
-    margin-bottom: 4px;
+    margin: 0 auto 2px;
+    width: fit-content;
   }
   .bt-side-label.prev { background: rgba(26,120,200,.3); color: #7ec8e3; }
   .bt-side-label.mit { background: rgba(26,122,74,.3); color: #7ed8a8; }
@@ -330,12 +333,14 @@
     background: rgba(255,255,255,.08);
     border-left: 3px solid rgba(255,255,255,.2);
     border-radius: 5px;
-    padding: 7px 10px;
+    padding: 8px 11px;
     font-size: 12px;
     color: rgba(255,255,255,.8);
     display: flex;
     align-items: center;
     gap: 8px;
+    min-height: 34px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
   }
   .bt-barrier.broken {
     border-left-color: #f5a623;
@@ -347,13 +352,24 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: 7px;
     flex-shrink: 0;
-    padding-top: 26px;
+    padding-top: 0;
+    position: relative;
+  }
+  .bt-center::before {
+    content: '';
+    position: absolute;
+    left: -18px;
+    top: 50%;
+    width: 18px;
+    height: 2px;
+    background: rgba(255,255,255,.35);
+    transform: translateY(-50%);
   }
   .bt-hazard {
-    width: 100px;
-    height: 100px;
+    width: 104px;
+    height: 104px;
     border-radius: 50%;
     background: radial-gradient(circle, #c0392b, #7f1d1d);
     border: 3px solid #c0392b;
@@ -375,9 +391,16 @@
     50%{box-shadow:0 0 0 14px rgba(192,57,43,0)}
   }
   .bt-arrows {
-    font-size: 20px;
-    color: rgba(255,255,255,.4);
+    font-size: 15px;
+    color: rgba(255,255,255,.7);
     line-height: 1;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   /* ── TYPOLOGY CARDS ── */
@@ -863,7 +886,8 @@
     .sl-header-row, .sl-body-row { grid-template-columns: 1fr; }
     .sl-cell { border-right: none; border-bottom: 1px solid #e8edf2; }
     .degrad-timeline { flex-direction: column; }
-    .bowtie { flex-direction: column; align-items: center; }
+    .bowtie { grid-template-columns: 1fr; justify-items: center; gap: 14px; }
+    .bt-center::before { display: none; }
     .xray-box { flex-direction: column; }
     .bt-side { max-width: 100%; }
   }
@@ -1265,7 +1289,7 @@
   <div class="container">
     <div class="hero-eyebrow">
       <span class="hero-dot"></span>
-      Alerta Técnico · Integridade · 2026
+      Alerta Técnico #001 . INTEGRIDADE . 2026 - REGAP/IE
     </div>
     <h1>
       O Risco Silencioso dos Trechos Mortos
@@ -1298,7 +1322,6 @@
 ═══════════════════════════════════════════════ -->
 <section id="contexto">
   <div class="container">
-    <div class="section-tag">Seção 1</div>
     <h2>Anomalias de Alto Potencial (TAP) e a Gestão de Barreiras</h2>
     <p class="lead">Na indústria de alto risco, os acidentes mais graves possuem causas diferentes dos incidentes menores. Anomalias de alto potencial são eventos precursores de acidentes severos — grandes vazamentos de líquidos ou gases inflamáveis capazes de gerar explosões.</p>
 
@@ -1350,26 +1373,18 @@
 
     <!-- Bow Tie -->
     <div class="bowtie-wrap">
-      <div class="bowtie-title">Gestão Dinâmica de Barreiras (GDB) — Metodologia Bow Tie</div>
+      <div class="bowtie-title">Gestão Dinâmica de Barreiras (GDB)</div>
       <div class="bowtie">
         <div class="bt-side">
           <div class="bt-side-label prev">← Barreiras Preventivas</div>
           <div class="bt-barrier"><i class="fa-solid fa-list-check"></i> Cadastro e inventário de deadlegs</div>
           <div class="bt-barrier"><i class="fa-solid fa-magnifying-glass"></i> Inspeção periódica (END)</div>
           <div class="bt-barrier"><i class="fa-solid fa-droplet"></i> Flushing regular documentado</div>
-          <div class="bt-barrier broken"><i class="fa-solid fa-triangle-exclamation"></i> GM de remoção (frequentemente não executada)</div>
+          <div class="bt-barrier broken"><i class="fa-solid fa-triangle-exclamation"></i> GM de remoção (nem sempre possível executar)</div>
         </div>
         <div class="bt-center">
           <div class="bt-arrows">▶</div>
           <div class="bt-hazard">TRECHO<br>MORTO<br><span style="font-size:9px;opacity:.7">deadleg</span></div>
-          <div class="bt-arrows">◀</div>
-        </div>
-        <div class="bt-side">
-          <div class="bt-side-label mit">Barreiras Mitigadoras →</div>
-          <div class="bt-barrier"><i class="fa-solid fa-bell"></i> Detector fixo de H₂S / LEL</div>
-          <div class="bt-barrier"><i class="fa-solid fa-helmet-safety"></i> EPI adequado ao fluido retido</div>
-          <div class="bt-barrier"><i class="fa-solid fa-file-signature"></i> PTW com deadleg no escopo</div>
-          <div class="bt-barrier broken"><i class="fa-solid fa-triangle-exclamation"></i> Plano de emergência atualizado</div>
         </div>
       </div>
     </div>
@@ -1388,7 +1403,6 @@
 ═══════════════════════════════════════════════ -->
 <section id="definicao" style="background:#fafbfc">
   <div class="container">
-    <div class="section-tag">Seção 2</div>
     <h2>O que são Trechos Mortos? (API 570 + API RP 2611)</h2>
     <p class="lead">Zonas mortas ("deadlegs") são componentes ou regiões de tubulação que possuem pouco ou nenhum fluxo significativo. O critério principal é a ausência de escoamento por um período superior a <strong>3 meses consecutivos</strong>, independente da causa.</p>
 
@@ -1473,7 +1487,6 @@
 ═══════════════════════════════════════════════ -->
 <section id="mecanismos">
   <div class="container">
-    <div class="section-tag">Seção 3</div>
     <h2>Mecanismos de Falha e a Progressão da Degradação</h2>
     <p class="lead">O fluido estagnado cria condições físico-químicas agressivas e distintas do fluxo em operação. Quatro mecanismos atuam simultaneamente e se retroalimentam.</p>
 
@@ -1569,7 +1582,6 @@
 ═══════════════════════════════════════════════ -->
 <section id="historico" style="background:#fafbfc">
   <div class="container">
-    <div class="section-tag">Seção 4</div>
     <h2>Histórico Crônico de Falhas de Gestão (2014–2022)</h2>
     <p class="lead">As perdas de contenção em trechos mortos têm histórico crônico no refino da Petrobras. O padrão se repete após alertas emitidos — evidenciando falha <strong>sistêmica de gestão</strong>, não apenas técnica.</p>
 
@@ -1643,7 +1655,6 @@
 ═══════════════════════════════════════════════ -->
 <section id="fluxo">
   <div class="container">
-    <div class="section-tag">Seção 5</div>
     <h2>Fluxo Integrado de Mitigação e Controle</h2>
     <p class="lead">O controle eficaz exige ação conjunta e sequenciada entre <strong>Operação (PR/TEU)</strong>, <strong>Inspeção de Equipamentos (IE)</strong> e <strong>Manutenção (PM)</strong>. Cada ator tem responsabilidades insubstituíveis.</p>
 
@@ -1743,7 +1754,6 @@
 ═══════════════════════════════════════════════ -->
 <section id="lideranca" style="background:#fafbfc">
   <div class="container">
-    <div class="section-tag">Seção 6</div>
     <h2>Checklist de Liderança e Disciplina de Campo</h2>
     <p class="lead">A liderança é a última barreira. A atuação proativa do líder de campo nas rotinas abaixo fecha os gaps que o sistema formal não captura. Clique para marcar os itens verificados.</p>
 
