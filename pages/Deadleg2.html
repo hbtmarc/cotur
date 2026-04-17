@@ -302,7 +302,7 @@
   .bowtie {
     display: grid;
     grid-template-columns: minmax(280px, 430px) 120px;
-    align-items: center;
+    align-items: start;
     justify-content: center;
     gap: 22px;
     max-width: 640px;
@@ -322,10 +322,14 @@
     letter-spacing: .1em;
     text-transform: uppercase;
     text-align: center;
-    padding: 5px 10px;
+    padding: 6px 12px;
     border-radius: 4px;
-    margin: 0 auto 2px;
-    width: fit-content;
+    margin: 0;
+    width: 100%;
+  }
+  .bowtie > .bt-side-label {
+    grid-column: 1 / -1;
+    margin-bottom: -10px;
   }
   .bt-side-label.prev { background: rgba(26,120,200,.3); color: #7ec8e3; }
   .bt-side-label.mit { background: rgba(26,122,74,.3); color: #7ed8a8; }
@@ -571,6 +575,72 @@
   .xray-content h4 { font-weight: 700; color: var(--gray-900); font-size: 14px; margin-bottom: 6px; }
   .xray-content p { font-size: 13px; color: var(--gray-500); line-height: 1.6; margin-bottom: 6px; }
   .xray-content p:last-child { margin-bottom: 0; }
+
+  /* ── ESQUEMA VINCULADO AO ESTUDO XRAY ── */
+  .case-link {
+    display: flex;
+    justify-content: center;
+    margin: -4px 0 8px;
+  }
+  .case-link-line {
+    width: 2px;
+    height: 18px;
+    background: linear-gradient(to bottom, rgba(192,57,43,.45), rgba(26,74,107,.45));
+    border-radius: 2px;
+  }
+  .flush-figure {
+    background: var(--white);
+    border: 1px solid #dbe3ea;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px 16px 12px;
+    margin-bottom: 24px;
+  }
+  .flush-figure-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 10px;
+  }
+  .flush-figure-title i { color: var(--red); }
+  .flush-svg {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+    background: linear-gradient(180deg, #f8fbfe 0%, #f1f5fa 100%);
+  }
+  .flush-legend {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 11.5px;
+    color: var(--gray-500);
+  }
+  .flush-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 9px;
+    border-radius: 999px;
+    border: 1px solid #d9e4ef;
+    background: #f8fbff;
+  }
+  .flush-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .flush-dot.main { background: var(--blue-mid); }
+  .flush-dot.dead { background: var(--red); }
+  .flush-dot.valve { background: var(--orange); }
 
   /* ── TIMELINE HISTÓRIA ── */
   .hist-timeline {
@@ -889,6 +959,9 @@
     .bowtie { grid-template-columns: 1fr; justify-items: center; gap: 14px; }
     .bt-center::before { display: none; }
     .xray-box { flex-direction: column; }
+    .flush-figure { padding: 12px 10px 10px; }
+    .flush-figure-title { font-size: 10px; }
+    .flush-legend { font-size: 10.5px; gap: 8px; }
     .bt-side { max-width: 100%; }
   }
 
@@ -1032,7 +1105,6 @@
     * {
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
-      color-adjust: exact !important;
     }
 
     /* ── 2. SEM ANIMAÇÕES ── */
@@ -1289,7 +1361,7 @@
   <div class="container">
     <div class="hero-eyebrow">
       <span class="hero-dot"></span>
-      Alerta Técnico #001 . INTEGRIDADE . 2026 - REGAP/IE
+      Alerta Técnico #001 · INTEGRIDADE · 2026 · REGAP/IE
     </div>
     <h1>
       O Risco Silencioso dos Trechos Mortos
@@ -1375,8 +1447,8 @@
     <div class="bowtie-wrap">
       <div class="bowtie-title">Gestão Dinâmica de Barreiras (GDB)</div>
       <div class="bowtie">
+        <div class="bt-side-label prev">Barreiras Preventivas</div>
         <div class="bt-side">
-          <div class="bt-side-label prev">← Barreiras Preventivas</div>
           <div class="bt-barrier"><i class="fa-solid fa-list-check"></i> Cadastro e inventário de deadlegs</div>
           <div class="bt-barrier"><i class="fa-solid fa-magnifying-glass"></i> Inspeção periódica (END)</div>
           <div class="bt-barrier"><i class="fa-solid fa-droplet"></i> Flushing regular documentado</div>
@@ -1505,20 +1577,6 @@
           <p>Sólidos, wax e escamas de ferro sedimentam, criando poças que retêm umidade e ativam pilhas galvânicas sob os depósitos — mecanismo silencioso e invisível externamente.</p>
         </div>
       </div>
-      <div class="card" style="border-left: 3px solid var(--red)">
-        <div class="card-icon red-bg"><i class="fa-solid fa-skull-crossbones"></i></div>
-        <div class="card-body">
-          <h4>Acúmulo de H₂S</h4>
-          <p>Gás ácido concentra-se no volume morto. Uma abertura inadvertida <strong>expõe o operador diretamente ao gás sem aviso prévio dos detectores</strong> — risco imediato à vida.</p>
-        </div>
-      </div>
-      <div class="card" style="border-left: 3px solid var(--orange)">
-        <div class="card-icon"><i class="fa-solid fa-masks-theater"></i></div>
-        <div class="card-body">
-          <h4>Falsa Segurança Pós-Lavagem</h4>
-          <p>Drenar a linha principal <strong>não limpa o volume morto</strong>. O trecho reacumula fluido após a operação. Abertura exige o mesmo cuidado de uma linha completa e pressurizada.</p>
-        </div>
-      </div>
     </div>
 
     <!-- Timeline Degradação -->
@@ -1564,7 +1622,220 @@
       <div class="xray-content">
         <h4><i class="fa-solid fa-circle-radiation" style="color:var(--red)"></i> &nbsp;Estudo de Caso — Radiografia em Dreno de 2″ / Linha de Cru de 12″</h4>
         <p>Uma radiografia em um dreno de 2" ligado a uma linha de óleo cru de 12" revelou <strong>cavidades profundas escondidas sob depósitos de processo</strong> após 12 meses de estagnação. A linha principal apresentava integridade nominal.</p>
-        <p>O dreno estava <strong>invisível à inspeção visual externa</strong>, não constava no plano de monitoramento vigente e não triggava nenhum alarme operacional. Falha só detectada por END específico.</p>
+        <p>O dreno estava <strong>invisível à inspeção visual externa</strong>, não constava no plano de monitoramento vigente e não acionava nenhum alarme operacional. Falha só detectada por END específico.</p>
+      </div>
+    </div>
+
+    <div class="case-link" aria-hidden="true">
+      <span class="case-link-line"></span>
+    </div>
+
+    <div class="flush-figure">
+      <div class="flush-figure-title"><i class="fa-solid fa-diagram-project"></i> Esquema Vinculado ao Caso — Falsa Segurança Pós-Lavagem</div>
+      <svg class="flush-svg" viewBox="0 0 960 460" role="img" aria-label="Esquema de linha principal com três ramais mortos — falsa segurança pós-lavagem">
+        <defs>
+          <!-- Gradients -->
+          <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f4f8fc"/>
+            <stop offset="100%" stop-color="#e8eff7"/>
+          </linearGradient>
+          <linearGradient id="mainPipeGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#9ecbe8"/>
+            <stop offset="40%" stop-color="#4d9fd6"/>
+            <stop offset="100%" stop-color="#2272a8"/>
+          </linearGradient>
+          <linearGradient id="cleanFlowGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#5bb3e8" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#1c6da8" stop-opacity="0.9"/>
+          </linearGradient>
+          <linearGradient id="deadPipeGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#b8c5d0"/>
+            <stop offset="100%" stop-color="#8d9dab"/>
+          </linearGradient>
+          <linearGradient id="fluidDanger" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#e8523a" stop-opacity="0.7"/>
+            <stop offset="100%" stop-color="#a01f10" stop-opacity="0.9"/>
+          </linearGradient>
+          <linearGradient id="valveGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f5a623"/>
+            <stop offset="100%" stop-color="#c97a10"/>
+          </linearGradient>
+          <!-- Arrow markers -->
+          <marker id="arrowFlow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <path d="M1,1 L7,4 L1,7 Z" fill="#1a5e8a"/>
+          </marker>
+          <marker id="arrowLeader" markerWidth="7" markerHeight="7" refX="1" refY="3.5" orient="auto">
+            <path d="M6,0 L0,3.5 L6,7 Z" fill="#5a6a7a"/>
+          </marker>
+          <marker id="arrowLeaderR" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+            <path d="M0,0 L6,3.5 L0,7 Z" fill="#5a6a7a"/>
+          </marker>
+          <!-- Filters -->
+          <filter id="dropShadow" x="-5%" y="-5%" width="110%" height="115%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#00000020"/>
+          </filter>
+          <filter id="dangerGlow">
+            <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#e8523a" flood-opacity="0.4"/>
+          </filter>
+        </defs>
+
+        <!-- ── Background ── -->
+        <rect width="960" height="460" fill="url(#bgGrad)" rx="8"/>
+
+        <!-- ── Top banner ── -->
+        <rect x="24" y="14" width="912" height="36" rx="6" fill="#1e5a8a" opacity="0.92"/>
+        <text x="480" y="36" text-anchor="middle" font-size="13" font-family="Open Sans, Segoe UI, sans-serif" fill="white" font-weight="700" letter-spacing="1">
+          CENÁRIO: LINHA PRINCIPAL LAVADA — RAMAIS MORTOS RETÊM FLUIDO PERIGOSO
+        </text>
+
+        <!-- ══════════════════════════════════════════════════
+             LINHA PRINCIPAL (main pipe, horizontal)
+        ══════════════════════════════════════════════════ -->
+        <!-- Pipe body -->
+        <rect x="60" y="158" width="840" height="44" rx="7" fill="url(#mainPipeGrad)" stroke="#1a5e8a" stroke-width="1.5" filter="url(#dropShadow)"/>
+        <!-- Pipe highlight (top sheen) -->
+        <rect x="62" y="160" width="836" height="8" rx="4" fill="white" opacity="0.25"/>
+        <!-- Clean flow fill inside pipe -->
+        <rect x="62" y="168" width="836" height="30" rx="3" fill="url(#cleanFlowGrad)" opacity="0.35"/>
+        <!-- Flow arrows inside pipe -->
+        <text x="220" y="185" font-size="16" fill="#1a5e8a" font-family="sans-serif" opacity="0.9">▶</text>
+        <text x="450" y="185" font-size="16" fill="#1a5e8a" font-family="sans-serif" opacity="0.9">▶</text>
+        <text x="680" y="185" font-size="16" fill="#1a5e8a" font-family="sans-serif" opacity="0.9">▶</text>
+        <!-- Pipe label inline -->
+        <rect x="340" y="172" width="280" height="20" rx="4" fill="#0e3f68" opacity="0.75"/>
+        <text x="480" y="186" text-anchor="middle" font-size="11" font-family="Open Sans, Segoe UI, sans-serif" fill="white" font-weight="700" letter-spacing="0.5">LINHA PRINCIPAL 12″ — LAVADA ✓</text>
+
+        <!-- ══════════════════════════════════════════════════
+             DEAD LEG 1 — x=230 (dreno típico)
+        ══════════════════════════════════════════════════ -->
+        <!-- Elbow junction -->
+        <rect x="218" y="200" width="24" height="10" rx="2" fill="#7a8fa0"/>
+        <!-- Vertical pipe -->
+        <rect x="218" y="208" width="24" height="180" rx="0" fill="url(#deadPipeGrad)" stroke="#7a8fa0" stroke-width="1"/>
+        <!-- Pipe end cap -->
+        <rect x="212" y="385" width="36" height="10" rx="3" fill="#5a6a7a" stroke="#3d4d5a" stroke-width="1"/>
+        <!-- VALVE at y=270 -->
+        <!-- Valve body (gate valve symbol) -->
+        <rect x="213" y="264" width="34" height="16" rx="2" fill="url(#valveGrad)" stroke="#8b5e10" stroke-width="1.2"/>
+        <!-- Valve stem -->
+        <line x1="230" y1="264" x2="230" y2="254" stroke="#c97a10" stroke-width="2.5"/>
+        <!-- Handwheel -->
+        <ellipse cx="230" cy="250" rx="12" ry="5" fill="none" stroke="#c97a10" stroke-width="2"/>
+        <line x1="218" y1="250" x2="242" y2="250" stroke="#c97a10" stroke-width="1.5"/>
+        <!-- Valve closed X marks -->
+        <line x1="218" y1="266" x2="248" y2="278" stroke="#6b3f08" stroke-width="1" opacity="0.5"/>
+        <line x1="248" y1="266" x2="218" y2="278" stroke="#6b3f08" stroke-width="1" opacity="0.5"/>
+        <!-- TRAPPED FLUID below valve -->
+        <rect x="220" y="282" width="20" height="103" rx="0" fill="url(#fluidDanger)" filter="url(#dangerGlow)"/>
+        <!-- Fluid meniscus -->
+        <ellipse cx="230" cy="282" rx="10" ry="3.5" fill="#e8523a" opacity="0.6"/>
+        <!-- Fluid surface bubbles -->
+        <circle cx="224" cy="290" r="2" fill="white" opacity="0.25"/>
+        <circle cx="236" cy="298" r="1.5" fill="white" opacity="0.2"/>
+        <!-- FECHADO label on valve -->
+        <text x="230" y="316" text-anchor="middle" font-size="9" font-family="Open Sans, Segoe UI, sans-serif" fill="#a01f10" font-weight="700" letter-spacing="0.3">⚠ ESTAGNADO</text>
+
+        <!-- ══════════════════════════════════════════════════
+             DEAD LEG 2 — x=480 (instrumento cego)
+        ══════════════════════════════════════════════════ -->
+        <rect x="468" y="200" width="24" height="10" rx="2" fill="#7a8fa0"/>
+        <rect x="468" y="208" width="24" height="180" rx="0" fill="url(#deadPipeGrad)" stroke="#7a8fa0" stroke-width="1"/>
+        <rect x="462" y="385" width="36" height="10" rx="3" fill="#5a6a7a" stroke="#3d4d5a" stroke-width="1"/>
+        <!-- Valve -->
+        <rect x="463" y="264" width="34" height="16" rx="2" fill="url(#valveGrad)" stroke="#8b5e10" stroke-width="1.2"/>
+        <line x1="480" y1="264" x2="480" y2="254" stroke="#c97a10" stroke-width="2.5"/>
+        <ellipse cx="480" cy="250" rx="12" ry="5" fill="none" stroke="#c97a10" stroke-width="2"/>
+        <line x1="468" y1="250" x2="492" y2="250" stroke="#c97a10" stroke-width="1.5"/>
+        <line x1="463" y1="266" x2="497" y2="278" stroke="#6b3f08" stroke-width="1" opacity="0.5"/>
+        <line x1="497" y1="266" x2="463" y2="278" stroke="#6b3f08" stroke-width="1" opacity="0.5"/>
+        <!-- Trapped fluid -->
+        <rect x="470" y="282" width="20" height="103" rx="0" fill="url(#fluidDanger)" filter="url(#dangerGlow)"/>
+        <ellipse cx="480" cy="282" rx="10" ry="3.5" fill="#e8523a" opacity="0.6"/>
+        <circle cx="474" cy="310" r="2" fill="white" opacity="0.2"/>
+        <circle cx="487" cy="326" r="1.5" fill="white" opacity="0.18"/>
+        <text x="480" y="316" text-anchor="middle" font-size="9" font-family="Open Sans, Segoe UI, sans-serif" fill="#a01f10" font-weight="700" letter-spacing="0.3">⚠ ESTAGNADO</text>
+
+        <!-- ══════════════════════════════════════════════════
+             DEAD LEG 3 — x=730 (dreno com cavidade END)
+        ══════════════════════════════════════════════════ -->
+        <rect x="718" y="200" width="24" height="10" rx="2" fill="#7a8fa0"/>
+        <rect x="718" y="208" width="24" height="180" rx="0" fill="url(#deadPipeGrad)" stroke="#7a8fa0" stroke-width="1"/>
+        <!-- Damaged cap (jagged line = corrosion) -->
+        <rect x="712" y="385" width="36" height="10" rx="3" fill="#6b1010" stroke="#3d0a0a" stroke-width="1"/>
+        <polyline points="714,385 719,381 724,385 729,380 734,385 739,381 744,385 748,381" fill="none" stroke="#e8523a" stroke-width="1.5"/>
+        <!-- Valve -->
+        <rect x="713" y="264" width="34" height="16" rx="2" fill="url(#valveGrad)" stroke="#8b5e10" stroke-width="1.2"/>
+        <line x1="730" y1="264" x2="730" y2="254" stroke="#c97a10" stroke-width="2.5"/>
+        <ellipse cx="730" cy="250" rx="12" ry="5" fill="none" stroke="#c97a10" stroke-width="2"/>
+        <line x1="718" y1="250" x2="742" y2="250" stroke="#c97a10" stroke-width="1.5"/>
+        <line x1="713" y1="266" x2="747" y2="278" stroke="#6b3f08" stroke-width="1" opacity="0.5"/>
+        <line x1="747" y1="266" x2="713" y2="278" stroke="#6b3f08" stroke-width="1" opacity="0.5"/>
+        <!-- Trapped fluid + deposits (darker, denser at bottom) -->
+        <rect x="720" y="282" width="20" height="103" rx="0" fill="url(#fluidDanger)" filter="url(#dangerGlow)"/>
+        <ellipse cx="730" cy="282" rx="10" ry="3.5" fill="#e8523a" opacity="0.6"/>
+        <!-- Deposits/sludge at bottom -->
+        <rect x="720" y="355" width="20" height="30" rx="0" fill="#6b0e0e" opacity="0.7"/>
+        <text x="730" y="316" text-anchor="middle" font-size="9" font-family="Open Sans, Segoe UI, sans-serif" fill="#a01f10" font-weight="700" letter-spacing="0.3">⚠ ESTAGNADO</text>
+
+        <!-- ══════════════════════════════════════════════════
+             ANNOTATION BOXES + LEADER LINES
+        ══════════════════════════════════════════════════ -->
+
+        <!-- ── Ann 1: Linha principal lavada (left, above pipe) ── -->
+        <path d="M165,155 L165,130 L80,130" fill="none" stroke="#4a7a9b" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arrowLeader)"/>
+        <rect x="20" y="86" width="200" height="64" rx="7" fill="#e3f2fc" stroke="#7ab8df" stroke-width="1.2" filter="url(#dropShadow)"/>
+        <rect x="20" y="86" width="200" height="20" rx="7" fill="#2272a8"/>
+        <rect x="20" y="100" width="200" height="6" fill="#2272a8"/>
+        <text x="120" y="100" text-anchor="middle" font-size="10.5" font-family="Open Sans, Segoe UI, sans-serif" fill="white" font-weight="800">LINHA PRINCIPAL</text>
+        <text x="30" y="120" font-size="10" font-family="Open Sans, Segoe UI, sans-serif" fill="#1a4a6b">Lavagem realizada. Fluxo</text>
+        <text x="30" y="134" font-size="10" font-family="Open Sans, Segoe UI, sans-serif" fill="#1a4a6b">renovado no tronco principal.</text>
+        <text x="30" y="146" font-size="10" font-family="Open Sans, Segoe UI, sans-serif" fill="#2272a8" font-weight="700">Integridade nominal aparente.</text>
+
+        <!-- ── Ann 2: Válvula fechada / ramal isolado (center) ── -->
+        <path d="M340,264 L340,240 L305,240" fill="none" stroke="#a07000" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arrowLeader)"/>
+        <rect x="340" y="230" width="190" height="68" rx="7" fill="#fff8e6" stroke="#e6c96a" stroke-width="1.2" filter="url(#dropShadow)"/>
+        <rect x="340" y="230" width="190" height="20" rx="7" fill="#e07800"/>
+        <rect x="340" y="244" width="190" height="6" fill="#e07800"/>
+        <text x="435" y="244" text-anchor="middle" font-size="10.5" font-family="Open Sans, Segoe UI, sans-serif" fill="white" font-weight="800">VÁLVULA FECHADA</text>
+        <text x="350" y="264" font-size="10" font-family="Open Sans, Segoe UI, sans-serif" fill="#5a3e00">Isola o ramal da linha</text>
+        <text x="350" y="278" font-size="10" font-family="Open Sans, Segoe UI, sans-serif" fill="#5a3e00">principal. Trecho morto</text>
+        <text x="350" y="292" font-size="10" font-family="Open Sans, Segoe UI, sans-serif" fill="#b35f00" font-weight="700">sem circulação.</text>
+
+        <!-- ── Ann 3: Fluido retido (right, below pipe zone) ── -->
+        <path d="M760,320 L800,320 L800,300" fill="none" stroke="#9a1f10" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arrowLeaderR)"/>
+        <rect x="760" y="316" width="188" height="76" rx="7" fill="#fdecea" stroke="#e6a3a0" stroke-width="1.2" filter="url(#dropShadow)"/>
+        <rect x="760" y="316" width="188" height="20" rx="7" fill="#b92010"/>
+        <rect x="760" y="330" width="188" height="6" fill="#b92010"/>
+        <text x="854" y="330" text-anchor="middle" font-size="10.5" font-family="Open Sans, Segoe UI, sans-serif" fill="white" font-weight="800">FLUIDO RETIDO</text>
+        <text x="770" y="350" font-size="10" font-family="Open Sans, Segoe UI, sans-serif" fill="#6b1010">Fluido estagnado, corrosivo</text>
+        <text x="770" y="364" font-size="10" font-family="Open Sans, Segoe UI, sans-serif" fill="#6b1010">e contaminado permanece</text>
+        <text x="770" y="378" font-size="10" font-family="Open Sans, Segoe UI, sans-serif" fill="#b92010" font-weight="700">no ramal morto.</text>
+
+        <!-- ── Ann 4: Cavidade / END required (above DL3) ── -->
+        <path d="M800,158 L800,130 L856,130" fill="none" stroke="#9a1f10" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arrowLeaderR)"/>
+        <rect x="733" y="80" width="200" height="72" rx="7" fill="#fff0f0" stroke="#e6a3a0" stroke-width="1.2" filter="url(#dropShadow)"/>
+        <rect x="733" y="80" width="200" height="20" rx="7" fill="#b92010"/>
+        <rect x="733" y="94" width="200" height="6" fill="#b92010"/>
+        <text x="833" y="94" text-anchor="middle" font-size="10.5" font-family="Open Sans, Segoe UI, sans-serif" fill="white" font-weight="800">CAVIDADE DETECTADA</text>
+        <text x="743" y="114" font-size="10" font-family="Open Sans, Segoe UI, sans-serif" fill="#6b1010">Corrosão oculta sob</text>
+        <text x="743" y="128" font-size="10" font-family="Open Sans, Segoe UI, sans-serif" fill="#6b1010">depósito — invisível à</text>
+        <text x="743" y="142" font-size="10" font-family="Open Sans, Segoe UI, sans-serif" fill="#b92010" font-weight="700">inspeção visual externa.</text>
+
+        <!-- ══════════════════════════════════════════════════
+             BOTTOM INSIGHT BAR
+        ══════════════════════════════════════════════════ -->
+        <rect x="24" y="408" width="912" height="38" rx="6" fill="#fff4e6" stroke="#efc59a" stroke-width="1.2"/>
+        <!-- Icon circle -->
+        <circle cx="48" cy="427" r="12" fill="#e07800" opacity="0.18"/>
+        <text x="48" y="431" text-anchor="middle" font-size="14" font-family="sans-serif" fill="#c97a10">!</text>
+        <text x="68" y="424" font-size="10.5" font-family="Open Sans, Segoe UI, sans-serif" fill="#7a4500" font-weight="700">FALSA SEGURANÇA PÓS-LAVAGEM:</text>
+        <text x="68" y="438" font-size="10.5" font-family="Open Sans, Segoe UI, sans-serif" fill="#5a3e00">A lavagem da linha principal não elimina o risco — os ramais mortos retêm fluido perigoso e exigem END específico.</text>
+      </svg>
+
+      <div class="flush-legend">
+        <span class="flush-pill"><span class="flush-dot main"></span> Linha principal lavada — fluxo renovado</span>
+        <span class="flush-pill"><span class="flush-dot dead"></span> Fluido estagnado retido no ramal morto</span>
+        <span class="flush-pill"><span class="flush-dot valve"></span> Válvula de bloqueio — ramal isolado (fechada)</span>
       </div>
     </div>
 
