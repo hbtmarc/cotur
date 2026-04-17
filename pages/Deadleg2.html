@@ -875,8 +875,8 @@
   }
   section { animation: fadeInUp .5s ease both; }
 
-  /* ── PDF DOWNLOAD BUTTON ── */
-  .pdf-btn {
+  /* ── PDF BUTTON & PANEL ── */
+  .pdf-fab {
     position: fixed;
     bottom: 28px;
     right: 28px;
@@ -889,244 +889,260 @@
     font-family: 'Open Sans', 'Segoe UI', sans-serif;
     font-size: 13px;
     font-weight: 700;
-    padding: 12px 22px;
+    padding: 13px 22px;
     border-radius: 50px;
     border: none;
     cursor: pointer;
     box-shadow: 0 4px 20px rgba(26,74,107,.45);
     transition: background .2s, transform .15s, box-shadow .2s;
-    text-decoration: none;
   }
-  .pdf-btn:hover {
-    background: var(--blue-mid);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 28px rgba(26,74,107,.5);
-  }
-  .pdf-btn:active { transform: translateY(0); }
-  .pdf-btn .pdf-icon { font-size: 15px; }
-  .pdf-btn-spinner {
-    display: none;
-    width: 15px;
-    height: 15px;
-    border: 2px solid rgba(255,255,255,.3);
-    border-top-color: white;
-    border-radius: 50%;
-    animation: spin .6s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .pdf-btn.loading .pdf-icon { display: none; }
-  .pdf-btn.loading .pdf-btn-spinner { display: block; }
-  .pdf-btn.loading { pointer-events: none; opacity: .85; }
+  .pdf-fab:hover { background: var(--blue-mid); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(26,74,107,.5); }
+  .pdf-fab:active { transform: translateY(0); }
 
-  /* ══════════════════════════════════════════
-     @media print — Todas as boas práticas
-  ══════════════════════════════════════════ */
+  /* Painel de opções */
+  .pdf-panel-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+    z-index: 9998;
+    backdrop-filter: blur(2px);
+  }
+  .pdf-panel-overlay.open { display: flex; align-items: flex-end; justify-content: flex-end; padding: 0 28px 80px 0; }
+  .pdf-panel {
+    background: white;
+    border-radius: 16px;
+    width: 380px;
+    box-shadow: 0 16px 48px rgba(0,0,0,.25);
+    overflow: hidden;
+    animation: panelUp .2s ease;
+  }
+  @keyframes panelUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .pdf-panel-header {
+    background: var(--blue);
+    color: white;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .pdf-panel-header h3 { font-size: 14px; font-weight: 700; }
+  .pdf-panel-close {
+    background: none; border: none; color: white; cursor: pointer;
+    font-size: 18px; line-height: 1; opacity: .7;
+  }
+  .pdf-panel-close:hover { opacity: 1; }
+  .pdf-panel-body { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+  .pdf-option {
+    border: 1.5px solid #e0e7ef;
+    border-radius: 10px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .pdf-option:hover { border-color: var(--blue-mid); background: var(--blue-light); }
+  .pdf-option-title { font-size: 13px; font-weight: 700; color: var(--gray-900); margin-bottom: 3px; }
+  .pdf-option-desc { font-size: 11.5px; color: var(--gray-500); line-height: 1.5; }
+  .pdf-option-badge {
+    display: inline-block;
+    font-size: 9px; font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    padding: 2px 7px;
+    border-radius: 8px;
+    margin-bottom: 5px;
+  }
+  .badge-best { background: #dcfce7; color: #166534; }
+  .badge-quick { background: #fef9c3; color: #854d0e; }
+  /* Caixa de terminal */
+  .pdf-cmd-box {
+    background: #1a1a2e;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .pdf-cmd-box code {
+    flex: 1;
+    font-size: 12px;
+    color: #7ec8e3;
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    word-break: break-all;
+  }
+  .pdf-cmd-copy {
+    flex-shrink: 0;
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.2);
+    color: white;
+    border-radius: 5px;
+    padding: 4px 9px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .15s;
+    font-family: 'Open Sans', sans-serif;
+  }
+  .pdf-cmd-copy:hover { background: rgba(255,255,255,.2); }
+  .pdf-cmd-copy.copied { background: var(--green); border-color: var(--green); }
+
+  /* ══════════════════════════════════════════════════════
+     @media print — preserva visual do site, A4 perfeito
+  ══════════════════════════════════════════════════════ */
+  @page {
+    size: A4 portrait;
+    margin: 13mm 10mm 16mm 10mm;
+  }
+  @page :first { margin-top: 8mm; }
+
   @media print {
 
-    /* ── Forçar impressão de cores/fundos ── */
-    *, *::before, *::after {
+    /* ── 1. FORÇAR CORES/FUNDOS EM TODOS OS ELEMENTOS ── */
+    * {
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
       color-adjust: exact !important;
     }
 
-    /* ── Página A4 ── */
-    @page {
-      size: A4 portrait;
-      margin: 14mm 12mm 18mm 12mm;
-    }
-    @page :first {
-      margin-top: 10mm;
+    /* ── 2. SEM ANIMAÇÕES ── */
+    *, *::before, *::after {
+      animation: none !important;
+      transition: none !important;
     }
 
-    /* ── Reset de tela ── */
-    body {
-      background: white !important;
-      font-size: 11pt !important;
-      line-height: 1.55 !important;
-      color: #1a1a1a !important;
-    }
-
-    /* ── Ocultar elementos de UI ── */
+    /* ── 3. OCULTAR UI DE TELA ── */
     nav,
-    .pdf-btn,
+    .pdf-fab,
+    .pdf-panel-overlay,
     .hero-dot,
     .hero-meta,
-    .chk-box,
-    .chk-item .chk-box {
+    .chk-box {
       display: none !important;
     }
 
-    /* ── Header hero ── */
-    header {
-      padding: 24pt 0 20pt !important;
-      background: linear-gradient(135deg, #b34700 0%, #e07b00 55%, #f5a623 100%) !important;
-      page-break-after: avoid;
+    /* ── 4. BODY / CONTAINER: LARGURA TOTAL A4 ── */
+    html, body {
+      background: #f0f2f5 !important;
+      width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
     }
-    header::before { display: none !important; }
-    header h1 { font-size: 22pt !important; }
-    header h1 span { font-size: 11pt !important; }
-    .hero-sub { font-size: 10pt !important; max-width: 100% !important; }
+    .container {
+      max-width: 100% !important;
+      padding: 0 4mm !important;
+    }
 
-    /* ── Seções — sem animação, fundo limpo ── */
+    /* ── 5. HEADER HERO — preservar gradiente ── */
+    header {
+      padding: 18mm 4mm 14mm !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      break-after: page;
+      page-break-after: always;
+    }
+    header::before {
+      /* faixa diagonal: manter mas simplificar para impressão */
+      background: none !important;
+    }
+    header h1 { font-size: 28pt !important; }
+    header h1 span { font-size: 13pt !important; }
+    .hero-eyebrow { font-size: 9pt !important; }
+    .hero-sub { font-size: 11pt !important; max-width: 100% !important; }
+
+    /* ── 6. SEÇÕES: LARGURA TOTAL, SEM FUNDO DE TELA ── */
     section {
-      animation: none !important;
-      padding: 18pt 0 14pt !important;
-      border-bottom: 1pt solid #ddd !important;
+      padding: 14mm 0 10mm !important;
+      border-bottom: 0.5pt solid #ccc !important;
       break-inside: auto;
+      /* fundo alternado das seções é preservado pois print-color-adjust=exact */
     }
     section:last-of-type { border-bottom: none !important; }
 
-    /* ── Títulos ── */
-    h2 { font-size: 16pt !important; margin-bottom: 8pt !important; }
-    .lead { font-size: 10.5pt !important; margin-bottom: 16pt !important; }
-    .section-tag { font-size: 8pt !important; }
-
-    /* ── Container — usar toda a largura ── */
-    .container { max-width: 100% !important; padding: 0 !important; }
-
-    /* ── Stat cards ── */
-    .stat-row {
-      grid-template-columns: repeat(3, 1fr) !important;
-      gap: 8pt !important;
-      margin-bottom: 16pt !important;
-    }
-    .stat-card {
-      box-shadow: none !important;
-      border: 1pt solid #ddd !important;
-      padding: 12pt 10pt !important;
-      break-inside: avoid;
-    }
-    .stat-num { font-size: 28pt !important; }
-
-    /* ── Pirâmide ── */
-    .pyramid-wrap {
-      box-shadow: none !important;
-      border: 1pt solid #ddd !important;
-      padding: 14pt !important;
-      break-inside: avoid;
-    }
-    .pyr-bar:hover { transform: none !important; }
-
-    /* ── Bow Tie ── */
-    .bowtie-wrap { break-inside: avoid; page-break-inside: avoid; }
-    .bt-hazard { animation: none !important; box-shadow: none !important; }
-    .bt-barrier { border-left-width: 3pt !important; }
-
-    /* ── Callouts ── */
-    .callout {
-      break-inside: avoid;
-      page-break-inside: avoid;
-      box-shadow: none !important;
-      margin-bottom: 12pt !important;
-    }
-
-    /* ── Cards grid ── */
-    .cards-grid {
-      grid-template-columns: repeat(2, 1fr) !important;
-      gap: 8pt !important;
-      margin-bottom: 16pt !important;
-    }
-    .card {
-      box-shadow: none !important;
-      border: 1pt solid #e0d8d0 !important;
-      padding: 10pt !important;
-      break-inside: avoid;
-      page-break-inside: avoid;
-      transform: none !important;
-    }
-    .card:hover { transform: none !important; box-shadow: none !important; }
-    .card-body h4 { font-size: 10pt !important; }
-    .card-body p { font-size: 9.5pt !important; }
-
-    /* ── Timeline degradação ── */
-    .degrad-timeline {
-      flex-direction: row !important;
-      break-inside: avoid;
-      page-break-inside: avoid;
-    }
-    .dt-phase {
-      min-width: 0 !important;
-      padding: 12pt 10pt !important;
-    }
-    .dt-phase:hover { transform: none !important; }
-    .dt-period { font-size: 14pt !important; }
-    .dt-phase-desc { font-size: 9pt !important; }
-
-    /* ── Xray box ── */
-    .xray-box {
-      box-shadow: none !important;
-      border: 1pt solid #ccc !important;
-      break-inside: avoid;
-      page-break-inside: avoid;
-    }
-    .xray-cavity-inner { animation: none !important; }
-
-    /* ── Timeline história ── */
-    .ht-item { break-inside: avoid; page-break-inside: avoid; margin-bottom: 14pt !important; }
-    .ht-content { box-shadow: none !important; padding: 10pt 14pt !important; font-size: 10pt !important; }
-    .ht-causes { font-size: 9.5pt !important; }
-
-    /* ── Swim lane ── */
-    .swimlane {
-      box-shadow: none !important;
-      break-inside: avoid;
-      page-break-inside: avoid;
-      font-size: 10pt !important;
-    }
-    .sl-header { padding: 8pt 10pt !important; font-size: 9pt !important; }
-    .sl-cell { padding: 10pt 10pt !important; font-size: 9.5pt !important; }
-    .sl-decision-row { padding: 10pt !important; font-size: 10pt !important; }
-    .sl-badge { font-size: 7.5pt !important; }
-    .sl-action { font-size: 10pt !important; }
-
-    /* ── Monitor alert ── */
-    .monitor-alert {
-      break-inside: avoid;
-      page-break-inside: avoid;
-      margin-top: 12pt !important;
-    }
-
-    /* ── Checklist ── */
-    .chk-item {
-      box-shadow: none !important;
-      border: 1pt solid #e0e0e0 !important;
-      padding: 8pt 12pt !important;
-      break-inside: avoid;
-      page-break-inside: avoid;
-      font-size: 10pt !important;
-      padding-left: 14pt !important;
-    }
-    .chk-item:hover { box-shadow: none !important; }
-    .chk-group-title { font-size: 9pt !important; margin-bottom: 6pt !important; }
-    .checklist-section { margin-bottom: 14pt !important; }
-
-    /* ── Golden rule ── */
-    .golden-rule {
-      box-shadow: none !important;
-      break-inside: avoid;
-      page-break-inside: avoid;
-      padding: 18pt !important;
-    }
-    .golden-rule-text { font-size: 12pt !important; }
-
-    /* ── Footer ── */
-    footer {
-      padding: 14pt 0 !important;
-      font-size: 9pt !important;
-      border-top: 1.5pt solid #333 !important;
-    }
-
-    /* ── Quebras de página estratégicas ── */
+    /* ── 7. QUEBRAS ESTRATÉGICAS POR SEÇÃO ── */
+    #contexto   { break-before: avoid; }
     #definicao  { break-before: page; page-break-before: always; }
     #mecanismos { break-before: page; page-break-before: always; }
     #historico  { break-before: page; page-break-before: always; }
     #fluxo      { break-before: page; page-break-before: always; }
     #lideranca  { break-before: page; page-break-before: always; }
 
-    /* ── Garantir que links não mostrem URL ── */
+    /* ── 8. ELEMENTOS QUE NUNCA SÃO CORTADOS ── */
+    .stat-card,
+    .card,
+    .callout,
+    .ht-item,
+    .ht-content,
+    .chk-item,
+    .xray-box,
+    .golden-rule,
+    .monitor-alert,
+    .pyramid-wrap,
+    .bowtie-wrap,
+    .degrad-timeline,
+    .swimlane {
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+    }
+
+    /* ── 9. TIPOGRAFIA PARA A4 ── */
+    body    { font-size: 10.5pt !important; line-height: 1.6 !important; }
+    h2      { font-size: 17pt !important; margin-bottom: 6pt !important; }
+    .lead   { font-size: 10pt !important; margin-bottom: 12pt !important; }
+    .section-tag { font-size: 8pt !important; }
+
+    /* ── 10. GRIDS: GARANTIR 2 COLUNAS EM A4 ── */
+    .stat-row   { grid-template-columns: repeat(3,1fr) !important; gap: 6pt !important; margin-bottom: 12pt !important; }
+    .cards-grid { grid-template-columns: repeat(2,1fr) !important; gap: 6pt !important; }
+    .stat-num   { font-size: 26pt !important; }
+    .card       { box-shadow: none !important; padding: 9pt !important; }
+    .card:hover { transform: none !important; }
+    .card-body p { font-size: 9pt !important; }
+
+    /* ── 11. SWIM LANE: AJUSTES DE FONTE ── */
+    .sl-header { font-size: 8pt !important; padding: 7pt 8pt !important; }
+    .sl-cell   { font-size: 9pt !important; padding: 8pt !important; }
+    .sl-badge  { font-size: 7pt !important; }
+    .sl-action { font-size: 9pt !important; }
+    .sl-decision-row { font-size: 9pt !important; padding: 8pt !important; }
+
+    /* ── 12. TIMELINE DEGRADAÇÃO: LINHA ÚNICA ── */
+    .degrad-timeline { flex-direction: row !important; }
+    .dt-phase:hover  { transform: none !important; }
+    .dt-period       { font-size: 13pt !important; }
+    .dt-phase-desc   { font-size: 8.5pt !important; }
+
+    /* ── 13. TIMELINE HISTÓRICO ── */
+    .ht-content { box-shadow: none !important; font-size: 9.5pt !important; }
+    .ht-causes  { font-size: 9pt !important; }
+    .ht-item    { margin-bottom: 12pt !important; }
+
+    /* ── 14. CHECKLIST ── */
+    .chk-item {
+      box-shadow: none !important;
+      border: 0.5pt solid #ccc !important;
+      font-size: 9.5pt !important;
+      padding: 7pt 10pt !important;
+    }
+    .chk-item:hover { box-shadow: none !important; }
+    .chk-group-title { font-size: 8.5pt !important; margin-bottom: 5pt !important; }
+    .checklist-section { margin-bottom: 10pt !important; }
+
+    /* ── 15. CALLOUT / BOX ── */
+    .callout     { margin-bottom: 10pt !important; }
+    .pyramid-wrap { box-shadow: none !important; }
+    .golden-rule  { box-shadow: none !important; padding: 14pt !important; }
+    .golden-rule-text { font-size: 11.5pt !important; }
+    .xray-box    { box-shadow: none !important; }
+    .bt-hazard   { animation: none !important; box-shadow: none !important; }
+    .xray-cavity-inner { animation: none !important; }
+
+    /* ── 16. FOOTER ── */
+    footer { padding: 10pt 0 !important; font-size: 8.5pt !important; }
+
+    /* ── 17. LINKS: SEM URL IMPRESSA ── */
+    a       { color: inherit !important; text-decoration: none !important; }
     a::after { content: '' !important; }
-    a { color: inherit !important; text-decoration: none !important; }
 
   } /* fim @media print */
 </style>
@@ -1708,12 +1724,45 @@
   </div>
 </footer>
 
-<!-- ═══ BOTÃO PDF ═══ -->
-<button class="pdf-btn" id="pdfBtn" onclick="exportPDF()" title="Baixar como PDF">
-  <i class="fa-solid fa-file-arrow-down pdf-icon"></i>
-  <span class="pdf-btn-spinner"></span>
-  Download PDF
+<!-- ═══ BOTÃO FAB PDF ═══ -->
+<button class="pdf-fab" id="pdfFab" onclick="openPdfPanel()">
+  <i class="fa-solid fa-file-arrow-down"></i>
+  Exportar PDF
 </button>
+
+<!-- ═══ PAINEL DE OPÇÕES PDF ═══ -->
+<div class="pdf-panel-overlay" id="pdfOverlay" onclick="closePdfPanel(event)">
+  <div class="pdf-panel">
+    <div class="pdf-panel-header">
+      <h3><i class="fa-solid fa-file-pdf"></i> &nbsp;Exportar como PDF</h3>
+      <button class="pdf-panel-close" onclick="closePdfPanel(null)">&times;</button>
+    </div>
+    <div class="pdf-panel-body">
+
+      <!-- Opção 1: Puppeteer (alta fidelidade) -->
+      <div class="pdf-option">
+        <div class="pdf-option-badge badge-best">⭐ Recomendado — Alta Fidelidade</div>
+        <div class="pdf-option-title"><i class="fa-solid fa-terminal" style="color:#1a4a6b"></i> &nbsp;Puppeteer (Chrome headless)</div>
+        <div class="pdf-option-desc">Gera PDF idêntico ao site — cores, gradientes, fundos escuros. Salva direto em <code style="background:#f0f2f5;padding:1px 5px;border-radius:3px">downloads/</code>.</div>
+        <div class="pdf-cmd-box">
+          <code id="puppeteerCmd">node generate-pdf.js</code>
+          <button class="pdf-cmd-copy" id="copyBtn" onclick="copyCmd()">Copiar</button>
+        </div>
+        <div style="font-size:11px;color:#888;margin-top:8px">
+          <i class="fa-solid fa-circle-info"></i> Execute no terminal dentro da pasta do projeto (<code style="font-size:10px">cotur/</code>)
+        </div>
+      </div>
+
+      <!-- Opção 2: window.print() (browser) -->
+      <div class="pdf-option" onclick="printBrowser()" style="cursor:pointer">
+        <div class="pdf-option-badge badge-quick">⚡ Rápido — Via Browser</div>
+        <div class="pdf-option-title"><i class="fa-solid fa-print" style="color:#854d0e"></i> &nbsp;Imprimir (Ctrl+P)</div>
+        <div class="pdf-option-desc">Abre o diálogo de impressão do browser. Em "Destino", selecione <strong>"Salvar como PDF"</strong> e ative a opção <strong>"Gráficos de fundo"</strong> para preservar cores.</div>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <script>
   /* ── Checklist toggle ── */
@@ -1723,48 +1772,51 @@
     item.classList.toggle('done');
   }
 
-  /* ── PDF Export via window.print() ── */
-  function exportPDF() {
-    const btn = document.getElementById('pdfBtn');
-
-    // 1. Feedback visual
-    btn.classList.add('loading');
-    btn.querySelector('span:not(.pdf-btn-spinner)') && null;
-
-    // 2. Trocar título da aba para sugerir nome do arquivo
-    const originalTitle = document.title;
-    document.title = 'Alerta-Tecnico_Trechos-Mortos_Deadlegs_2026';
-
-    // 3. Garantir que todas as fontes/imagens carregaram
-    //    antes de abrir o diálogo de impressão
-    setTimeout(function() {
-      window.print();
-
-      // 4. Restaurar após print (pode ser cancelado ou concluído)
-      //    O evento afterprint é suportado nos principais browsers
-      function onAfterPrint() {
-        document.title = originalTitle;
-        btn.classList.remove('loading');
-        window.removeEventListener('afterprint', onAfterPrint);
-      }
-
-      window.addEventListener('afterprint', onAfterPrint);
-
-      // Fallback: restaurar em 6s caso afterprint não dispare
-      setTimeout(function() {
-        document.title = originalTitle;
-        btn.classList.remove('loading');
-      }, 6000);
-
-    }, 200); // pausa mínima para browser renderizar spinner
+  /* ── Painel PDF ── */
+  function openPdfPanel() {
+    document.getElementById('pdfOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closePdfPanel(e) {
+    // Fecha ao clicar no overlay ou no X
+    if (e && e.target !== document.getElementById('pdfOverlay')) return;
+    document.getElementById('pdfOverlay').classList.remove('open');
+    document.body.style.overflow = '';
   }
 
-  /* ── Atalho de teclado: Ctrl/Cmd + Shift + P ── */
+  /* ── Copiar comando ── */
+  function copyCmd() {
+    const cmd = document.getElementById('puppeteerCmd').textContent;
+    navigator.clipboard.writeText(cmd).then(function() {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copiado!';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'Copiar';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  /* ── Imprimir via browser ── */
+  function printBrowser() {
+    closePdfPanel(null);
+    const originalTitle = document.title;
+    document.title = 'Alerta-Tecnico_Trechos-Mortos_Deadlegs_2026';
+    setTimeout(function() {
+      window.print();
+      function onAfterPrint() {
+        document.title = originalTitle;
+        window.removeEventListener('afterprint', onAfterPrint);
+      }
+      window.addEventListener('afterprint', onAfterPrint);
+      setTimeout(function() { document.title = originalTitle; }, 8000);
+    }, 300);
+  }
+
+  /* ── Fechar painel com ESC ── */
   document.addEventListener('keydown', function(e) {
-    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'P') {
-      e.preventDefault();
-      exportPDF();
-    }
+    if (e.key === 'Escape') closePdfPanel(null);
   });
 </script>
 </body>

@@ -1,0 +1,9 @@
+{
+  "name": "cotur-pdf-exporter",
+  "version": "1.0.0",
+  "description": "Gerador PDF local — usa Chrome do sistema, sem dependências npm",
+  "scripts": {
+    "pdf": "node generate-pdf.js",
+    "pdf:deadleg2": "node generate-pdf.js Deadleg2"
+  }
+}
