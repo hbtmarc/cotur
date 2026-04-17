@@ -996,6 +996,12 @@
   }
   @page :first { margin-top: 8mm; }
 
+  /* ── PÁGINA A4 — tamanho e margens ── */
+  @page {
+    size: A4 portrait;
+    margin: 10mm 12mm 14mm 12mm;
+  }
+
   @media print {
 
     /* ── 1. FORÇAR CORES/FUNDOS EM TODOS OS ELEMENTOS ── */
@@ -1021,28 +1027,34 @@
       display: none !important;
     }
 
-    /* ── 4. BODY / CONTAINER: LARGURA TOTAL A4 ── */
-    html, body {
+    /* ── 4. BODY / CONTAINER: CENTRALIZADO, LARGURA A4 ── */
+    html {
+      width: 210mm !important;
+    }
+    body {
       background: #f0f2f5 !important;
-      width: 100% !important;
-      margin: 0 !important;
+      width: 210mm !important;
+      margin: 0 auto !important;
       padding: 0 !important;
     }
     .container {
-      max-width: 100% !important;
-      padding: 0 4mm !important;
+      width: 186mm !important;
+      max-width: 186mm !important;
+      margin: 0 auto !important;
+      padding: 0 !important;
     }
 
     /* ── 5. HEADER HERO — preservar gradiente ── */
     header {
-      padding: 18mm 4mm 14mm !important;
+      width: 210mm !important;
+      margin-left: -12mm !important;
+      padding: 14mm 12mm 12mm !important;
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
       break-after: page;
       page-break-after: always;
     }
     header::before {
-      /* faixa diagonal: manter mas simplificar para impressão */
       background: none !important;
     }
     header h1 { font-size: 28pt !important; }
@@ -1050,12 +1062,13 @@
     .hero-eyebrow { font-size: 9pt !important; }
     .hero-sub { font-size: 11pt !important; max-width: 100% !important; }
 
-    /* ── 6. SEÇÕES: LARGURA TOTAL, SEM FUNDO DE TELA ── */
+    /* ── 6. SEÇÕES: FUNDO ESTENDIDO FULL-WIDTH ── */
     section {
-      padding: 14mm 0 10mm !important;
+      width: 210mm !important;
+      margin-left: -12mm !important;
+      padding: 10mm 12mm 10mm !important;
       border-bottom: 0.5pt solid #ccc !important;
       break-inside: auto;
-      /* fundo alternado das seções é preservado pois print-color-adjust=exact */
     }
     section:last-of-type { border-bottom: none !important; }
 
@@ -1138,7 +1151,12 @@
     .xray-cavity-inner { animation: none !important; }
 
     /* ── 16. FOOTER ── */
-    footer { padding: 10pt 0 !important; font-size: 8.5pt !important; }
+    footer {
+      width: 210mm !important;
+      margin-left: -12mm !important;
+      padding: 8pt 12mm !important;
+      font-size: 8.5pt !important;
+    }
 
     /* ── 17. LINKS: SEM URL IMPRESSA ── */
     a       { color: inherit !important; text-decoration: none !important; }
