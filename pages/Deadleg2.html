@@ -999,7 +999,7 @@
   /* ── PÁGINA A4 — tamanho e margens ── */
   @page {
     size: A4 portrait;
-    margin: 6mm 8mm 8mm 8mm;
+    margin: 7mm;
   }
 
   @media print {
@@ -1039,12 +1039,19 @@
       width: 100% !important;
       max-width: none !important;
       margin: 0 auto !important;
-      padding: 0 !important;
+      padding: 0 1.8mm !important;
+      box-sizing: border-box !important;
     }
     p,
     li {
       margin-top: 0.28em !important;
       margin-bottom: 0.28em !important;
+    }
+    header .container,
+    section .container,
+    footer .container {
+      margin-left: auto !important;
+      margin-right: auto !important;
     }
 
     /* ── 5. HEADER HERO — preservar gradiente sem criar página vazia ── */
@@ -1064,6 +1071,13 @@
     header h1 span { font-size: 10pt !important; }
     .hero-eyebrow { font-size: 7.5pt !important; }
     .hero-sub { font-size: 8.5pt !important; max-width: 100% !important; }
+    .hero-eyebrow,
+    header h1,
+    .hero-sub {
+      text-align: center !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
 
     /* ── 6. SEÇÕES: COMPACTAS E CONTÍGUAS ── */
     section {
@@ -1113,6 +1127,13 @@
     h2      { font-size: 13.2pt !important; margin-bottom: 4pt !important; }
     .lead   { font-size: 8.4pt !important; margin-bottom: 5pt !important; }
     .section-tag { font-size: 8pt !important; }
+    h2,
+    .lead,
+    .section-tag,
+    footer,
+    footer p {
+      text-align: center !important;
+    }
 
     /* ── 10. GRIDS: GARANTIR 2 COLUNAS EM A4 ── */
     .stat-row   { grid-template-columns: repeat(3,1fr) !important; gap: 4pt !important; margin-bottom: 6pt !important; }
@@ -1121,6 +1142,19 @@
     .card       { box-shadow: none !important; padding: 5pt !important; }
     .card:hover { transform: none !important; }
     .card-body p { font-size: 7.8pt !important; }
+    .stat-row,
+    .cards-grid,
+    .pyramid-wrap,
+    .bowtie-wrap,
+    .degrad-timeline,
+    .swimlane,
+    .xray-box,
+    .callout,
+    .golden-rule,
+    .monitor-alert {
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
 
     /* ── 11. SWIM LANE: AJUSTES DE FONTE ── */
     .sl-header { font-size: 6.4pt !important; padding: 4pt 5pt !important; }
@@ -1167,6 +1201,7 @@
     .xray-title {
       margin-bottom: 4pt !important;
       font-size: 8.4pt !important;
+      text-align: center !important;
     }
 
     /* ── 16. FOOTER ── */
@@ -1175,6 +1210,7 @@
       margin: 2mm 0 0 !important;
       padding: 5pt 0 !important;
       font-size: 7.4pt !important;
+      border-top: 0.35pt solid #d6dbe1 !important;
     }
 
     /* ── 17. LINKS: SEM URL IMPRESSA ── */
