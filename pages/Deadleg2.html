@@ -642,6 +642,35 @@
   .flush-dot.dead { background: var(--red); }
   .flush-dot.valve { background: var(--orange); }
 
+  /* ── FLOWCHART ── */
+  .flowchart-wrap {
+    background: var(--white);
+    border: 1px solid #dbe3ea;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px 16px 12px;
+    margin: 28px 0 24px;
+  }
+  .flowchart-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 12px;
+  }
+  .flowchart-title i { color: #1a7a4a; }
+  .flowchart-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 6px;
+    border: 1px solid #d6dfe8;
+  }
+
   /* ── TIMELINE HISTÓRIA ── */
   .hist-timeline {
     position: relative;
@@ -1347,6 +1376,15 @@
       border-top: 0.35pt solid #d6dbe1 !important;
     }
 
+    /* ── FLOWCHART ── */
+    .flowchart-wrap {
+      padding: 10pt 8pt 8pt !important;
+      margin: 10pt 0 8pt !important;
+      break-inside: avoid !important;
+    }
+    .flowchart-title { font-size: 7pt !important; margin-bottom: 6pt !important; }
+    .flowchart-svg { width: 100% !important; height: auto !important; }
+
     /* ── 17. LINKS: SEM URL IMPRESSA ── */
     a       { color: inherit !important; text-decoration: none !important; }
     a::after { content: '' !important; }
@@ -1854,7 +1892,7 @@
 <section id="historico" style="background:#fafbfc">
   <div class="container">
     <h2>Histórico Crônico de Falhas de Gestão (2014–2022)</h2>
-    <p class="lead">As perdas de contenção em trechos mortos têm histórico crônico no refino da Petrobras. O padrão se repete após alertas emitidos — evidenciando falha <strong>sistêmica de gestão</strong>, não apenas técnica.</p>
+    <p class="lead">As perdas de contenção em trechos mortos têm histórico crônico no refino da Petrobras. O padrão se repete após alertas emitidos — evidenciando falha <strong>no processo de gestão de TM</strong>, não apenas técnica.</p>
 
     <div class="hist-timeline">
 
@@ -1915,7 +1953,7 @@
     <div class="callout blue">
       <div class="callout-icon"><i class="fa-solid fa-lightbulb"></i></div>
       <div class="callout-body">
-        <strong>Lição aprendida:</strong> O padrão de repetição entre 2019 e 2020 demonstra que mapear sem inspecionar, inspecionar sem atualizar planos, e planejar sem executar o flushing são três falhas de gestão distintas — que devem ser monitoradas e cobradas separadamente.
+        <strong>Lição aprendida:</strong> O padrão de repetição entre 2019 e 2020 demonstra que mapear sem inspecionar, inspecionar sem atualizar planos, e planejar sem executar o flushing são três falhas no processo de gestão de TMdistintas — que devem ser monitoradas e cobradas separadamente.
       </div>
     </div>
   </div>
@@ -1927,7 +1965,7 @@
 <section id="fluxo">
   <div class="container">
     <h2>Fluxo Integrado de Mitigação e Controle</h2>
-    <p class="lead">O controle eficaz exige ação conjunta e sequenciada entre <strong>Operação (PR/TEU)</strong>, <strong>Inspeção de Equipamentos (IE)</strong> e <strong>Manutenção (PM)</strong>. Cada ator tem responsabilidades insubstituíveis.</p>
+    <p class="lead">O controle eficaz exige ação conjunta e sequenciada entre <strong>Operação (PR/TEU)</strong>, <strong>Inspeção de Equipamentos (IE)</strong>, <strong>Manutenção (PM)</strong> e <strong>Acompanhamento do trabalho (Confiabilidade (CFSP))</strong>. Cada ator tem responsabilidades insubstituíveis.</p>
 
     <div class="swimlane">
       <div class="sl-header-row">
@@ -2010,6 +2048,316 @@
         </div>
       </div>
     </div>
+
+    <!-- ═══════════ FLOWCHART SVG ═══════════ -->
+    <div class="flowchart-wrap">
+      <div class="flowchart-title"><i class="fa-solid fa-sitemap"></i> Diagrama do Fluxo — Visão Integrada PR/TEU · IE · PM</div>
+      <svg class="flowchart-svg" viewBox="0 0 1160 510" role="img" aria-label="Fluxograma integrado de controle de trechos mortos entre Operação, Inspeção e Manutenção">
+        <defs>
+          <!-- Lane gradients -->
+          <linearGradient id="laneOp" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#ddeeff"/>
+            <stop offset="100%" stop-color="#eef5fc"/>
+          </linearGradient>
+          <linearGradient id="laneIe" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#d6f0e4"/>
+            <stop offset="100%" stop-color="#eaf7f0"/>
+          </linearGradient>
+          <linearGradient id="lanePm" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#fde8d0"/>
+            <stop offset="100%" stop-color="#fef3ea"/>
+          </linearGradient>
+          <!-- Box fills -->
+          <linearGradient id="boxOp" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#e8f3fc"/>
+            <stop offset="100%" stop-color="#cde3f5"/>
+          </linearGradient>
+          <linearGradient id="boxIe" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#e5f6ed"/>
+            <stop offset="100%" stop-color="#c6ecd8"/>
+          </linearGradient>
+          <linearGradient id="boxPm" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fef0e2"/>
+            <stop offset="100%" stop-color="#fadfc0"/>
+          </linearGradient>
+          <linearGradient id="boxSim" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fff8e2"/>
+            <stop offset="100%" stop-color="#faeab5"/>
+          </linearGradient>
+          <linearGradient id="diamondFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fff9e0"/>
+            <stop offset="100%" stop-color="#f5d76e"/>
+          </linearGradient>
+          <!-- Filters -->
+          <filter id="boxShadow" x="-4%" y="-6%" width="108%" height="120%">
+            <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#00000018"/>
+          </filter>
+          <!-- Arrowhead markers -->
+          <marker id="arr" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+            <path d="M1,1 L8,4.5 L1,8 Z" fill="#4a6a8a"/>
+          </marker>
+          <marker id="arrUp" markerWidth="9" markerHeight="9" refX="4.5" refY="1" orient="auto">
+            <path d="M1,8 L4.5,1 L8,8 Z" fill="#4a6a8a"/>
+          </marker>
+          <marker id="arrSim" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+            <path d="M1,1 L8,4.5 L1,8 Z" fill="#b07000"/>
+          </marker>
+          <marker id="arrNao" markerWidth="9" markerHeight="9" refX="4.5" refY="8" orient="auto">
+            <path d="M1,1 L4.5,8 L8,1 Z" fill="#1a5e8a"/>
+          </marker>
+          <marker id="arrLoop" markerWidth="9" markerHeight="9" refX="1" refY="4.5" orient="auto">
+            <path d="M8,1 L1,4.5 L8,8 Z" fill="#1a7a4a"/>
+          </marker>
+        </defs>
+
+        <!-- ══════════════════════════════════════
+             SWIM LANE BACKGROUNDS
+        ══════════════════════════════════════ -->
+        <!-- PR/TEU Lane: y 0–185 -->
+        <rect x="0" y="0" width="1160" height="185" fill="url(#laneOp)"/>
+        <rect x="0" y="0" width="38" height="185" fill="#1a4a6b"/>
+        <text transform="translate(19,185) rotate(-90)" text-anchor="end" font-size="11" font-family="Open Sans,sans-serif" fill="white" font-weight="700" letter-spacing="1">PR e TEU</text>
+
+        <!-- IE Lane: y 185–390 -->
+        <rect x="0" y="185" width="1160" height="205" fill="url(#laneIe)"/>
+        <rect x="0" y="185" width="38" height="205" fill="#1a7a4a"/>
+        <text transform="translate(19,390) rotate(-90)" text-anchor="end" font-size="11" font-family="Open Sans,sans-serif" fill="white" font-weight="700" letter-spacing="1">IE</text>
+
+        <!-- PM Lane: y 390–490 -->
+        <rect x="0" y="390" width="1160" height="120" fill="url(#lanePm)"/>
+        <rect x="0" y="390" width="38" height="120" fill="#7f3f02"/>
+        <text transform="translate(19,490) rotate(-90)" text-anchor="end" font-size="11" font-family="Open Sans,sans-serif" fill="white" font-weight="700" letter-spacing="1">PM</text>
+
+        <!-- Lane separators -->
+        <line x1="38" y1="185" x2="1160" y2="185" stroke="#a0b8c8" stroke-width="1.2" stroke-dasharray="6,4"/>
+        <line x1="38" y1="390" x2="1160" y2="390" stroke="#a8c4a8" stroke-width="1.2" stroke-dasharray="6,4"/>
+
+        <!-- Vertical divider: Não | Sim paths -->
+        <line x1="720" y1="0" x2="720" y2="510" stroke="#c8b860" stroke-width="1" stroke-dasharray="8,5" opacity="0.6"/>
+        <!-- Divider labels -->
+        <rect x="630" y="4" width="68" height="18" rx="4" fill="#d4a800" opacity="0.2"/>
+        <text x="664" y="16" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#7a5a00" font-weight="700">← NÃO</text>
+        <rect x="724" y="4" width="64" height="18" rx="4" fill="#c87a00" opacity="0.18"/>
+        <text x="756" y="16" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#7a4800" font-weight="700">SIM →</text>
+
+        <!-- ══════════════════════════════════════
+             NÃO PATH — PR/TEU ROW (boxes A, B, C)
+        ══════════════════════════════════════ -->
+
+        <!-- BOX A: Listar TM -->
+        <rect x="48" y="58" width="148" height="78" rx="7" fill="url(#boxOp)" stroke="#2272a8" stroke-width="1.4" filter="url(#boxShadow)"/>
+        <rect x="48" y="58" width="148" height="18" rx="7" fill="#1a4a6b"/>
+        <rect x="48" y="70" width="148" height="6" fill="#1a4a6b"/>
+        <text x="122" y="70" text-anchor="middle" font-size="9.5" font-family="Open Sans,sans-serif" fill="white" font-weight="800">IDENTIFICAR TM</text>
+        <text x="122" y="92" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#1a3a5a">Listar tubulações HC</text>
+        <text x="122" y="104" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#1a3a5a">sem fluxo ou baixa</text>
+        <text x="122" y="116" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#1a3a5a">frequência de uso (TM)</text>
+        <text x="122" y="129" text-anchor="middle" font-size="8" font-family="Open Sans,sans-serif" fill="#3a80b0" font-style="italic">Levantamento PR e TEU</text>
+
+        <!-- A → B arrow -->
+        <line x1="196" y1="97" x2="216" y2="97" stroke="#4a6a8a" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- BOX B: Verificar API 2611 -->
+        <rect x="218" y="58" width="148" height="78" rx="7" fill="url(#boxOp)" stroke="#2272a8" stroke-width="1.4" filter="url(#boxShadow)"/>
+        <rect x="218" y="58" width="148" height="18" rx="7" fill="#1a4a6b"/>
+        <rect x="218" y="70" width="148" height="6" fill="#1a4a6b"/>
+        <text x="292" y="70" text-anchor="middle" font-size="9.5" font-family="Open Sans,sans-serif" fill="white" font-weight="800">VERIFICAR CRITÉRIOS</text>
+        <text x="292" y="92" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#1a3a5a">Tubulações isoladas por</text>
+        <text x="292" y="104" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#1a3a5a">válvulas ou uso inferior</text>
+        <text x="292" y="116" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#1a3a5a">a 3 meses consecutivos</text>
+        <text x="292" y="129" text-anchor="middle" font-size="8" font-family="Open Sans,sans-serif" fill="#3a80b0" font-style="italic">Conceito API RP 2611</text>
+
+        <!-- B → C arrow -->
+        <line x1="366" y1="97" x2="386" y2="97" stroke="#4a6a8a" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- BOX C: Traduzir Isométricos -->
+        <rect x="388" y="58" width="148" height="78" rx="7" fill="url(#boxOp)" stroke="#2272a8" stroke-width="1.4" filter="url(#boxShadow)"/>
+        <rect x="388" y="58" width="148" height="18" rx="7" fill="#1a4a6b"/>
+        <rect x="388" y="70" width="148" height="6" fill="#1a4a6b"/>
+        <text x="462" y="70" text-anchor="middle" font-size="9.5" font-family="Open Sans,sans-serif" fill="white" font-weight="800">TRADUZIR LISTA</text>
+        <text x="462" y="92" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#1a3a5a">Traduzir a lista para</text>
+        <text x="462" y="104" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#1a3a5a">os Isométricos de</text>
+        <text x="462" y="116" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#1a3a5a">Engenharia</text>
+
+        <!-- C → Diamond arrow -->
+        <line x1="536" y1="97" x2="556" y2="97" stroke="#4a6a8a" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- ══════════════════════════════════════
+             DECISION DIAMOND
+        ══════════════════════════════════════ -->
+        <!-- Diamond shape centered at cx=620, cy=97 -->
+        <polygon points="620,58 680,97 620,136 560,97" fill="url(#diamondFill)" stroke="#c8a000" stroke-width="1.8" filter="url(#boxShadow)"/>
+        <text x="620" y="88" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#5a3e00" font-weight="800">TM PODE SER</text>
+        <text x="620" y="100" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#5a3e00" font-weight="800">REMOVIDO?</text>
+        <!-- Não label (down) -->
+        <text x="595" y="148" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#1a5e8a" font-weight="700">Não</text>
+        <!-- Sim label (right) -->
+        <text x="696" y="94" text-anchor="start" font-size="9" font-family="Open Sans,sans-serif" fill="#b07000" font-weight="700">Sim</text>
+
+        <!-- Diamond NÃO arrow (down to IE lane) -->
+        <line x1="620" y1="136" x2="620" y2="200" stroke="#1a5e8a" stroke-width="1.8" marker-end="url(#arrNao)"/>
+        <!-- Diamond NÃO → D box connector (goes down-left) -->
+        <line x1="620" y1="200" x2="462" y2="200" stroke="#1a5e8a" stroke-width="1.8"/>
+        <line x1="462" y1="200" x2="462" y2="208" stroke="#1a5e8a" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- Diamond SIM arrow (right) -->
+        <line x1="680" y1="97" x2="740" y2="97" stroke="#b07000" stroke-width="1.8" marker-end="url(#arrSim)"/>
+
+        <!-- ══════════════════════════════════════
+             NÃO PATH — IE ROW (boxes D, E, F)
+        ══════════════════════════════════════ -->
+
+        <!-- BOX D: Cadastrar TM no GINSPEQ -->
+        <rect x="388" y="210" width="148" height="72" rx="7" fill="url(#boxIe)" stroke="#1a7a4a" stroke-width="1.4" filter="url(#boxShadow)"/>
+        <rect x="388" y="210" width="148" height="18" rx="7" fill="#1a7a4a"/>
+        <rect x="388" y="222" width="148" height="6" fill="#1a7a4a"/>
+        <text x="462" y="222" text-anchor="middle" font-size="9.5" font-family="Open Sans,sans-serif" fill="white" font-weight="800">CADASTRAR NO ACET</text>
+        <text x="462" y="242" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#0e3d20">Registrar TM no ACET</text>
+        <text x="462" y="254" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#0e3d20">e GINSPEQ com</text>
+        <text x="462" y="266" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#0e3d20">Deadleg ID único</text>
+        <text x="462" y="276" text-anchor="middle" font-size="8" font-family="Open Sans,sans-serif" fill="#2a8a50" font-style="italic">IE responsável</text>
+
+        <!-- D → E arrow -->
+        <line x1="536" y1="246" x2="556" y2="246" stroke="#2a8a50" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- BOX E: Estabelecer Plano ENDs -->
+        <rect x="558" y="210" width="150" height="72" rx="7" fill="url(#boxIe)" stroke="#1a7a4a" stroke-width="1.4" filter="url(#boxShadow)"/>
+        <rect x="558" y="210" width="150" height="18" rx="7" fill="#1a7a4a"/>
+        <rect x="558" y="222" width="150" height="6" fill="#1a7a4a"/>
+        <text x="633" y="222" text-anchor="middle" font-size="9.5" font-family="Open Sans,sans-serif" fill="white" font-weight="800">PLANO DE INSPEÇÃO</text>
+        <text x="633" y="242" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#0e3d20">Estabelecer plano com</text>
+        <text x="633" y="254" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#0e3d20">ENDs específicos (UTS,</text>
+        <text x="633" y="266" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#0e3d20">varredura, ondas guiadas)</text>
+        <text x="633" y="276" text-anchor="middle" font-size="8" font-family="Open Sans,sans-serif" fill="#2a8a50" font-style="italic">+ periodicidade definida</text>
+
+        <!-- E is at x=558 to 708, so goes to row below (F would be inline or below) 
+             We'll put F below E (y=300) -->
+
+        <!-- E → F arrow (going down) -->
+        <line x1="633" y1="282" x2="633" y2="302" stroke="#2a8a50" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- BOX F: Inspecionar conforme plano -->
+        <rect x="558" y="304" width="150" height="72" rx="7" fill="url(#boxIe)" stroke="#1a7a4a" stroke-width="1.4" filter="url(#boxShadow)"/>
+        <rect x="558" y="304" width="150" height="18" rx="7" fill="#1a7a4a"/>
+        <rect x="558" y="316" width="150" height="6" fill="#1a7a4a"/>
+        <text x="633" y="316" text-anchor="middle" font-size="9.5" font-family="Open Sans,sans-serif" fill="white" font-weight="800">INSPECIONAR</text>
+        <text x="633" y="336" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#0e3d20">Executar inspeções</text>
+        <text x="633" y="348" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#0e3d20">conforme plano</text>
+        <text x="633" y="360" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#0e3d20">estabelecido para TM</text>
+        <text x="633" y="370" text-anchor="middle" font-size="8" font-family="Open Sans,sans-serif" fill="#2a8a50" font-style="italic">ENDs periódicos</text>
+
+        <!-- F → G arrow (going left to registrar) -->
+        <line x1="558" y1="340" x2="536" y2="340" stroke="#2a8a50" stroke-width="1.8" marker-end="url(#arrLoop)"/>
+
+        <!-- BOX G: Realizar registro GINSPEQ -->
+        <rect x="388" y="304" width="148" height="72" rx="7" fill="url(#boxIe)" stroke="#1a7a4a" stroke-width="1.4" filter="url(#boxShadow)"/>
+        <rect x="388" y="304" width="148" height="18" rx="7" fill="#1a7a4a"/>
+        <rect x="388" y="316" width="148" height="6" fill="#1a7a4a"/>
+        <text x="462" y="316" text-anchor="middle" font-size="9.5" font-family="Open Sans,sans-serif" fill="white" font-weight="800">REGISTRAR</text>
+        <text x="462" y="336" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#0e3d20">Realizar registro do</text>
+        <text x="462" y="348" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#0e3d20">relatório de inspeção</text>
+        <text x="462" y="360" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#0e3d20">no GINSPEQ</text>
+
+        <!-- G → Atualizar (H) — up arrow indicating loop -->
+        <line x1="462" y1="304" x2="462" y2="286" stroke="#2a8a50" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#arrUp)"/>
+        <!-- Loop label -->
+        <text x="470" y="297" font-size="8" font-family="Open Sans,sans-serif" fill="#1a7a4a" font-weight="700" font-style="italic">loop</text>
+        <!-- Connect back to D area visually -->
+        <line x1="462" y1="282" x2="462" y2="282" stroke="#2a8a50" stroke-width="1.8"/>
+
+        <!-- ══════════════════════════════════════
+             SIM PATH — RIGHT COLUMN
+        ══════════════════════════════════════ -->
+
+        <!-- BOX I: Realizar GM (PR/TEU lane) -->
+        <rect x="742" y="58" width="160" height="78" rx="7" fill="url(#boxSim)" stroke="#c8a000" stroke-width="1.8" filter="url(#boxShadow)"/>
+        <rect x="742" y="58" width="160" height="18" rx="7" fill="#b07000"/>
+        <rect x="742" y="70" width="160" height="6" fill="#b07000"/>
+        <text x="822" y="70" text-anchor="middle" font-size="9.5" font-family="Open Sans,sans-serif" fill="white" font-weight="800">REALIZAR GM</text>
+        <text x="822" y="90" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#5a3800">Abrir Gestão de Mudança</text>
+        <text x="822" y="102" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#5a3800">para remoção do TM</text>
+        <text x="822" y="114" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#5a3800">na PPG da unidade</text>
+        <text x="822" y="127" text-anchor="middle" font-size="8" font-family="Open Sans,sans-serif" fill="#b07000" font-style="italic">PE-2RGN-00175</text>
+
+        <!-- I → J arrow (going down to IE lane) -->
+        <line x1="822" y1="136" x2="822" y2="208" stroke="#b07000" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- BOX J: Plano inspeção até remoção (IE lane) -->
+        <rect x="742" y="210" width="160" height="72" rx="7" fill="url(#boxIe)" stroke="#c8a000" stroke-width="1.8" filter="url(#boxShadow)"/>
+        <rect x="742" y="210" width="160" height="18" rx="7" fill="#1a7a4a"/>
+        <rect x="742" y="222" width="160" height="6" fill="#1a7a4a"/>
+        <text x="822" y="222" text-anchor="middle" font-size="9.5" font-family="Open Sans,sans-serif" fill="white" font-weight="800">PLANO ATÉ REMOÇÃO</text>
+        <text x="822" y="242" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#0e3d20">Plano de inspeção</text>
+        <text x="822" y="254" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#0e3d20">intermediário até a</text>
+        <text x="822" y="266" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#0e3d20">remoção definida no GM</text>
+
+        <!-- J → K arrow -->
+        <line x1="822" y1="282" x2="822" y2="302" stroke="#2a8a50" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- BOX K: Incluir na PPG (IE lane) -->
+        <rect x="742" y="304" width="160" height="72" rx="7" fill="url(#boxIe)" stroke="#1a7a4a" stroke-width="1.4" filter="url(#boxShadow)"/>
+        <rect x="742" y="304" width="160" height="18" rx="7" fill="#1a7a4a"/>
+        <rect x="742" y="316" width="160" height="6" fill="#1a7a4a"/>
+        <text x="822" y="316" text-anchor="middle" font-size="9.5" font-family="Open Sans,sans-serif" fill="white" font-weight="800">INCLUIR NA PPG</text>
+        <text x="822" y="336" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#0e3d20">Substituição do TM no</text>
+        <text x="822" y="348" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#0e3d20">escopo da PPG</text>
+        <text x="822" y="360" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#0e3d20">(Lista de Serviços/SAE)</text>
+
+        <!-- K → L arrow (going down to PM lane) -->
+        <line x1="822" y1="376" x2="822" y2="408" stroke="#2a8a50" stroke-width="1.8" marker-end="url(#arr)"/>
+
+        <!-- BOX L: Realizar remoção (PM lane) -->
+        <rect x="742" y="410" width="160" height="76" rx="7" fill="url(#boxPm)" stroke="#7f3f02" stroke-width="1.8" filter="url(#boxShadow)"/>
+        <rect x="742" y="410" width="160" height="18" rx="7" fill="#7f3f02"/>
+        <rect x="742" y="422" width="160" height="6" fill="#7f3f02"/>
+        <text x="822" y="422" text-anchor="middle" font-size="9.5" font-family="Open Sans,sans-serif" fill="white" font-weight="800">REMOVER TM NA PPG</text>
+        <text x="822" y="443" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#4a2000">Realizar remoção física</text>
+        <text x="822" y="455" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#4a2000">do trecho morto</text>
+        <text x="822" y="467" text-anchor="middle" font-size="9" font-family="Open Sans,sans-serif" fill="#4a2000">conforme escopo GM</text>
+        <text x="822" y="479" text-anchor="middle" font-size="8" font-family="Open Sans,sans-serif" fill="#9a5020" font-style="italic">PM executa</text>
+
+        <!-- L → Atualizar cadastro path (arrow going left, then up to D) -->
+        <line x1="742" y1="450" x2="555" y2="450" stroke="#7f3f02" stroke-width="1.8" stroke-dasharray="5,3"/>
+        <line x1="555" y1="450" x2="462" y2="450" stroke="#7f3f02" stroke-width="1.8" stroke-dasharray="5,3"/>
+        <line x1="462" y1="450" x2="462" y2="378" stroke="#7f3f02" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+        <text x="640" y="446" text-anchor="middle" font-size="8" font-family="Open Sans,sans-serif" fill="#7f3f02" font-weight="700" font-style="italic">Atualizar cadastro GINSPEQ após remoção</text>
+
+        <!-- ══════════════════════════════════════
+             SECOND SIM COLUMN: ATUALIZAR (IE, right)
+             Already pointing to G (box at x=388) via the dotted line
+        ══════════════════════════════════════ -->
+
+        <!-- ══════════════════════════════════════
+             BOTTOM LEGEND / FOOTER BAR
+        ══════════════════════════════════════ -->
+        <rect x="930" y="210" width="218" height="152" rx="7" fill="white" stroke="#c0cedb" stroke-width="1" opacity="0.9" filter="url(#boxShadow)"/>
+        <rect x="930" y="210" width="218" height="20" rx="7" fill="#2a3a4a"/>
+        <rect x="930" y="224" width="218" height="6" fill="#2a3a4a"/>
+        <text x="1039" y="224" text-anchor="middle" font-size="9.5" font-family="Open Sans,sans-serif" fill="white" font-weight="800">LEGENDA</text>
+        <!-- Op -->
+        <rect x="942" y="240" width="12" height="10" rx="2" fill="#1a4a6b"/>
+        <text x="960" y="250" font-size="9" font-family="Open Sans,sans-serif" fill="#2a3a4a">Operação (PR/TEU)</text>
+        <!-- Ie -->
+        <rect x="942" y="256" width="12" height="10" rx="2" fill="#1a7a4a"/>
+        <text x="960" y="266" font-size="9" font-family="Open Sans,sans-serif" fill="#2a3a4a">Inspeção (IE)</text>
+        <!-- Pm -->
+        <rect x="942" y="272" width="12" height="10" rx="2" fill="#7f3f02"/>
+        <text x="960" y="282" font-size="9" font-family="Open Sans,sans-serif" fill="#2a3a4a">Manutenção (PM)</text>
+        <!-- Sim box -->
+        <rect x="942" y="288" width="12" height="10" rx="2" fill="#b07000"/>
+        <text x="960" y="298" font-size="9" font-family="Open Sans,sans-serif" fill="#2a3a4a">Caminho SIM (remover TM)</text>
+        <!-- Não path -->
+        <line x1="942" y1="308" x2="954" y2="308" stroke="#1a5e8a" stroke-width="1.8" marker-end="url(#arr)"/>
+        <text x="960" y="313" font-size="9" font-family="Open Sans,sans-serif" fill="#2a3a4a">Caminho NÃO (monitorar TM)</text>
+        <!-- Loop path -->
+        <line x1="942" y1="328" x2="954" y2="328" stroke="#7f3f02" stroke-width="1.8" stroke-dasharray="4,2"/>
+        <text x="960" y="333" font-size="9" font-family="Open Sans,sans-serif" fill="#2a3a4a">Retorno / atualização</text>
+        <!-- Diamond -->
+        <polygon points="948,344 957,351 948,358 939,351" fill="url(#diamondFill)" stroke="#c8a000" stroke-width="1"/>
+        <text x="960" y="355" font-size="9" font-family="Open Sans,sans-serif" fill="#2a3a4a">Decisão obrigatória</text>
+      </svg>
+    </div>
+    <!-- ═══════════ END FLOWCHART ═══════════ -->
 
     <div class="monitor-alert">
       <div class="monitor-badge"><i class="fa-solid fa-triangle-exclamation"></i> &nbsp;Alerta</div>
