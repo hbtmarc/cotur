@@ -1046,6 +1046,8 @@
     li {
       margin-top: 0.28em !important;
       margin-bottom: 0.28em !important;
+      orphans: 3;
+      widows: 3;
     }
     header .container,
     section .container,
@@ -1088,6 +1090,17 @@
       break-inside: auto;
     }
     section:last-of-type { border-bottom: none !important; }
+    section > .container > h2,
+    section > .container > .section-tag,
+    section > .container > .lead,
+    .pyramid-title,
+    .bowtie-title,
+    .degrad-title,
+    .checklist-title,
+    .xray-title {
+      break-after: avoid !important;
+      page-break-after: avoid !important;
+    }
 
     /* ── 7. QUEBRAS ESTRATÉGICAS POR BLOCO, NÃO POR SEÇÃO INTEIRA ── */
     #contexto,
@@ -1118,8 +1131,20 @@
     .degrad-timeline,
     .swimlane,
     .xray-box {
-      break-inside: auto !important;
-      page-break-inside: auto !important;
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+    }
+
+    .stat-row,
+    .cards-grid,
+    .checklist-grid,
+    .ht-timeline,
+    .bt-grid,
+    .swimlane-grid,
+    table,
+    figure {
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
     }
 
     /* ── 9. TIPOGRAFIA PARA A4 ── */
@@ -1202,6 +1227,19 @@
       margin-bottom: 4pt !important;
       font-size: 8.4pt !important;
       text-align: center !important;
+    }
+
+    h2 + .lead,
+    .lead + .stat-row,
+    .lead + .cards-grid,
+    .lead + .pyramid-wrap,
+    .lead + .bowtie-wrap,
+    .lead + .degrad-timeline,
+    .lead + .swimlane,
+    .lead + .checklist-section,
+    .lead + .xray-box {
+      break-before: avoid !important;
+      page-break-before: avoid !important;
     }
 
     /* ── 16. FOOTER ── */
