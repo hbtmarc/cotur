@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Interativo — Pesquisa REGAP/IE 2026</title>
+
+  <!-- ============================================================
+       ESTILOS
+       ============================================================ -->
+  <style>
+
+    /* --- Reset & Variáveis ------------------------------------ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:    #1a7a4a;
+      --green2:   #0f5d37;
+      --greenL:   #e8f8ee;
+      --orange:   #e07b00;
+      --orangeL:  #fff4e6;
+      --blue:     #1a4a6b;
+      --blue2:    #1e6091;
+      --blueL:    #e8f4fd;
+      --red:      #c0392b;
+      --redL:     #fdecea;
+      --gray900:  #1a1a1a;
+      --gray700:  #3d3d3d;
+      --gray500:  #666;
+      --gray200:  #e8e8e8;
+      --bg:       #f0f2f5;
+      --white:    #fff;
+      --shadow:   0 2px 12px rgba(0,0,0,.08);
+      --shadowMd: 0 8px 28px rgba(0,0,0,.14);
+      --radius:   14px;
+    }
+
+    /* --- Base ------------------------------------------------- */
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--gray700);
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 22px; }
+
+    /* --- Header ----------------------------------------------- */
+    header {
+      background: linear-gradient(135deg, #0f5d37 0%, #1a7a4a 52%, #e07b00 125%);
+      color: white;
+      padding: 64px 0 56px;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        -45deg,
+        transparent, transparent 22px,
+        rgba(255,255,255,.05) 22px, rgba(255,255,255,.05) 23px
+      );
+    }
+    .hero { position: relative; }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      background: rgba(0,0,0,.22);
+      padding: 5px 14px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #ffd166;
+      animation: blink 2s infinite;
+    }
+    @keyframes blink { 50% { opacity: .35; } }
+
+    h1 {
+      font-size: clamp(30px, 5vw, 48px);
+      line-height: 1.1;
+      font-weight: 850;
+      max-width: 880px;
+      margin-bottom: 14px;
+    }
+    .hero-sub  { font-size: 16px; max-width: 790px; opacity: .92; }
+    .hero-meta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 26px; }
+
+    .badge {
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.28);
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* --- Navegação -------------------------------------------- */
+    nav {
+      position: sticky;
+      top: 0;
+      background: white;
+      border-bottom: 1px solid #dbe3ea;
+      z-index: 10;
+      box-shadow: var(--shadow);
+    }
+    .nav-inner { display: flex; gap: 6px; overflow: auto; padding: 10px 22px; }
+
+    nav a {
+      text-decoration: none;
+      color: var(--gray500);
+      font-size: 12px;
+      font-weight: 750;
+      white-space: nowrap;
+      padding: 7px 13px;
+      border-radius: 999px;
+      transition: .2s;
+    }
+    nav a:hover { background: var(--greenL); color: var(--green2); }
+
+    /* --- Secoes ----------------------------------------------- */
+    section { padding: 54px 0; border-bottom: 1px solid #e1e5e9; }
+
+    .section-tag {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--orange);
+      font-weight: 850;
+      margin-bottom: 8px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .section-tag::before {
+      content: '';
+      width: 18px; height: 3px;
+      background: var(--orange);
+      border-radius: 3px;
+    }
+
+    h2 {
+      font-size: clamp(22px, 3vw, 32px);
+      color: var(--blue);
+      font-weight: 850;
+      margin-bottom: 10px;
+      line-height: 1.25;
+    }
+    .lead { font-size: 16px; color: var(--gray500); max-width: 800px; margin-bottom: 28px; }
+
+    /* --- KPIs -------------------------------------------------- */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin: 30px 0;
+    }
+    .kpi {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px 20px;
+      border-top: 4px solid var(--green);
+      text-align: center;
+      transition: .2s;
+    }
+    .kpi:hover          { transform: translateY(-3px); box-shadow: var(--shadowMd); }
+    .kpi:nth-child(2)   { border-color: var(--blue2); }
+    .kpi:nth-child(3)   { border-color: var(--orange); }
+    .kpi:nth-child(4)   { border-color: var(--green2); }
+    .kpi .num           { font-size: 44px; line-height: 1; font-weight: 850; color: var(--green); margin-bottom: 8px; }
+    .kpi:nth-child(2) .num { color: var(--blue2); }
+    .kpi:nth-child(3) .num { color: var(--orange); }
+    .kpi .label         { font-size: 13px; font-weight: 700; color: var(--gray500); }
+    .kpi small          { display: block; color: #888; font-size: 11px; margin-top: 5px; }
+
+    /* --- Layout utilitario ------------------------------------- */
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+
+    .panel { background: white; border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px; }
+    .panel h3 { font-size: 16px; color: var(--blue); margin-bottom: 14px; }
+
+    /* --- Barras ------------------------------------------------ */
+    .bar-row   { display: grid; grid-template-columns: 190px 1fr 52px; gap: 12px; align-items: center; margin: 12px 0; }
+    .bar-label { font-size: 13px; font-weight: 700; color: var(--gray700); }
+    .bar-track { height: 16px; background: #edf1f5; border-radius: 999px; overflow: hidden; }
+    .bar-fill  { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--green), #42b883); width: 0; transition: width 1.2s ease; }
+    .bar-fill.orange { background: linear-gradient(90deg, var(--orange), #f5a623); }
+    .bar-fill.red    { background: linear-gradient(90deg, var(--red),    #e76f61); }
+    .bar-value { font-size: 12px; font-weight: 800; color: var(--gray500); text-align: right; }
+
+    /* --- Insight ----------------------------------------------- */
+    .insight {
+      display: flex;
+      gap: 14px;
+      background: var(--orangeL);
+      border-left: 4px solid var(--orange);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin: 22px 0;
+    }
+    .insight strong { color: var(--gray900); }
+
+    /* --- Cards de ranking ------------------------------------- */
+    .rank-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+
+    .rank-card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      border-left: 5px solid var(--green);
+    }
+    .rank-card.opp { border-left-color: var(--orange); }
+    .rank-card h4  { font-size: 15px; color: var(--gray900); margin-bottom: 10px; }
+
+    .score-pill {
+      display: inline-block;
+      background: var(--greenL);
+      color: var(--green2);
+      font-weight: 850;
+      font-size: 12px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+    .opp .score-pill { background: var(--orangeL); color: var(--orange); }
+
+    /* --- Qualitativo ------------------------------------------ */
+    .theme-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+
+    .quote {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      margin-bottom: 14px;
+      border-left: 4px solid var(--blue2);
+    }
+    .quote span { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; font-weight: 850; color: var(--blue2); }
+    .quote p    { font-size: 13px; color: var(--gray700); margin-top: 7px; }
+
+    /* --- Recomendacoes ---------------------------------------- */
+    .rec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+
+    .rec-card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      border-top: 5px solid var(--green);
+    }
+    .rec-card.alta  { border-color: var(--red); }
+    .rec-card.media { border-color: var(--orange); }
+
+    .rec-prio  { font-size: 10px; font-weight: 850; text-transform: uppercase; letter-spacing: .1em; color: var(--gray500); margin-bottom: 6px; }
+    .rec-card h4    { font-size: 16px; color: var(--gray900); margin-bottom: 7px; }
+    .rec-card p     { font-size: 13.5px; margin-bottom: 9px; }
+    .rec-card small { font-size: 11.5px; color: var(--gray500); line-height: 1.45; }
+
+    /* --- Footer ----------------------------------------------- */
+    footer {
+      background: #1a1a2e;
+      color: rgba(255,255,255,.6);
+      padding: 30px 0;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    /* --- Botoes flutuantes ------------------------------------ */
+    .fab-group {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-end;
+      z-index: 20;
+    }
+    .fab {
+      background: var(--blue);
+      color: white;
+      border: none;
+      border-radius: 999px;
+      padding: 13px 18px;
+      font-weight: 800;
+      font-size: 13px;
+      box-shadow: var(--shadowMd);
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+      white-space: nowrap;
+    }
+    .fab:hover        { background: var(--blue2); transform: scale(1.04); }
+    .fab.save         { background: var(--green2); display: none; }
+    .fab.save:hover   { background: var(--green); }
+    .fab.active       { background: var(--orange); }
+    .fab.active:hover { background: #c96e00; }
+
+    /* --- Modo de Edicao --------------------------------------- */
+    body.edit-mode [data-editable]:hover {
+      outline: 2px dashed var(--orange);
+      outline-offset: 3px;
+      border-radius: 4px;
+      cursor: text;
+    }
+    body.edit-mode [data-editable]:focus {
+      outline: 2px solid var(--orange);
+      outline-offset: 3px;
+      border-radius: 4px;
+      background: rgba(255,244,230,.55);
+    }
+    .edit-banner {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: var(--orange);
+      color: white;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 7px 16px;
+      z-index: 100;
+      letter-spacing: .04em;
+    }
+    body.edit-mode .edit-banner { display: block; }
+    body.edit-mode nav           { top: 31px; }
+
+    /* --- Animacoes de entrada --------------------------------- */
+    .fade { opacity: 0; transform: translateY(20px); transition: .65s ease; }
+    .fade.visible { opacity: 1; transform: translateY(0); }
+
+    /* --- Responsivo ------------------------------------------- */
+    @media (max-width: 800px) {
+      .grid2, .theme-wrap { grid-template-columns: 1fr; }
+      .bar-row   { grid-template-columns: 1fr; }
+      .bar-value { text-align: left; }
+    }
+
+    /* --- Print ------------------------------------------------ */
+    @media print {
+      nav, .fab-group, .edit-banner { display: none; }
+      section  { padding: 24px 0; }
+      header   { padding: 34px 0; }
+      .fade    { opacity: 1; transform: none; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- BANNER DE MODO DE EDICAO -->
+  <div class="edit-banner">Modo de Edicao ativado - clique em qualquer texto para editar</div>
+
+  <!-- CABECALHO -->
+  <header>
+    <div class="container hero">
+      <div class="eyebrow">
+        <span class="dot"></span>
+        <span data-editable>Relatorio REGAP/IE 2026</span>
+      </div>
+      <h1 data-editable>Evento de Planejamento REGAP/IE 2026</h1>
+      <p class="hero-sub" data-editable>Painel executivo com consolidacao das respostas, leitura critica, pontos fortes e oportunidades de melhoria para a proxima edicao.</p>
+      <div class="hero-meta">
+        <span class="badge" data-editable>42 respostas</span>
+        <span class="badge" data-editable>80.8% de adesao</span>
+        <span class="badge" data-editable>9.53/10 satisfacao geral</span>
+        <span class="badge" data-editable>97.5% intencao de retorno</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- NAVEGACAO -->
+  <nav>
+    <div class="nav-inner container">
+      <a href="#visao">1. Visao geral</a>
+      <a href="#blocos">2. Blocos</a>
+      <a href="#ranking">3. Ranking</a>
+      <a href="#qualitativo">4. Comentarios</a>
+      <a href="#recomendacoes">5. Recomendacoes</a>
+    </div>
+  </nav>
+
+  <!-- 1. VISAO GERAL -->
+  <section id="visao" class="fade">
+    <div class="container">
+      <div class="section-tag" data-editable>Visao executiva</div>
+      <h2 data-editable>Evento amplamente bem avaliado, com oportunidade concentrada na experiencia da confraternizacao</h2>
+      <p class="lead" data-editable>Os indicadores mostram uma percepcao geral muito positiva. A analise critica, porem, aponta que a proxima edicao pode ganhar qualidade ao priorizar musica/entretenimento, integracao e refinamento do cardapio de bebidas.</p>
+
+      <div class="kpi-grid">
+        <div class="kpi">
+          <div class="num" data-count="42">0</div>
+          <div class="label" data-editable>Respostas obtidas</div>
+          <small data-editable>Meta de referencia: 52</small>
+        </div>
+        <div class="kpi">
+          <div class="num" data-count="80.8" data-suffix="%">0</div>
+          <div class="label" data-editable>Aderencia da pesquisa</div>
+          <small data-editable>base esperada de 52 participantes</small>
+        </div>
+        <div class="kpi">
+          <div class="num" data-count="9.53">0</div>
+          <div class="label" data-editable>Satisfacao geral /10</div>
+          <small data-editable>40 respostas validas</small>
+        </div>
+        <div class="kpi">
+          <div class="num" data-count="97.5" data-suffix="%">0</div>
+          <div class="label" data-editable>Participaria novamente</div>
+          <small data-editable>39 de 40 respostas validas</small>
+        </div>
+      </div>
+
+      <div class="insight">
+        <div>&#9888;</div>
+        <div data-editable><strong>Leitura critica:</strong> a media geral e alta, mas a variacao entre itens revela um ponto claro de acao: Musica/DJ foi o item mais sensivel, com 3,95/5.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. ANALISE POR BLOCO -->
+  <section id="blocos" class="fade">
+    <div class="container">
+      <div class="section-tag" data-editable>Analise por bloco</div>
+      <h2 data-editable>Almoco e palestras lideram a avaliacao; confraternizacao segue positiva, porem com mais oportunidades</h2>
+      <div class="grid2">
+        <div class="panel">
+          <h3 data-editable>Media por bloco</h3>
+          <div id="blockBars"></div>
+        </div>
+        <div class="panel">
+          <h3 data-editable>Distribuicao da satisfacao geral</h3>
+          <div id="ratingBars"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. RANKING -->
+  <section id="ranking" class="fade">
+    <div class="container">
+      <div class="section-tag" data-editable>Forcas e oportunidades</div>
+      <h2 data-editable>O que deve ser preservado e o que merece ajuste na proxima edicao</h2>
+      <div class="grid2">
+        <div>
+          <h3 style="color:var(--green);margin-bottom:14px" data-editable>Forcas</h3>
+          <div id="topCards" class="rank-grid"></div>
+        </div>
+        <div>
+          <h3 style="color:var(--orange);margin-bottom:14px" data-editable>Oportunidades</h3>
+          <div id="bottomCards" class="rank-grid"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. VOZ DOS PARTICIPANTES -->
+  <section id="qualitativo" class="fade">
+    <div class="container">
+      <div class="section-tag" data-editable>Voz dos participantes</div>
+      <h2 data-editable>Comentarios reforcam elogios a organizacao e sinalizam melhorias em musica, integracao e cardapio</h2>
+      <div class="theme-wrap">
+        <div class="panel">
+          <h3 data-editable>Mencoes por tema</h3>
+          <div id="themeBars"></div>
+        </div>
+        <div>
+          <h3 style="color:var(--blue);margin-bottom:14px" data-editable>Trechos representativos</h3>
+          <div class="quote">
+            <span data-editable>Elogios a organizacao e conducao</span>
+            <p data-editable>"Otimo evento. Parabens pela organizacao."</p>
+          </div>
+          <div class="quote">
+            <span data-editable>Musica/DJ e banda ao vivo</span>
+            <p data-editable>"Diminuir o tempo de palestras, contratar banda junto com DJ"</p>
+          </div>
+          <div class="quote">
+            <span data-editable>Bebidas, cardapio e alimentacao</span>
+            <p data-editable>"Almoco com opcoes mais leves."</p>
+          </div>
+          <div class="quote">
+            <span data-editable>Interacao e atividades de integracao</span>
+            <p data-editable>"O evento agrega nivelando informacoes, metas, desafios e fortalecendo o espirito de equipe."</p>
+          </div>
+          <div class="quote">
+            <span data-editable>Tempo/duracao das palestras</span>
+            <p data-editable>"A palestra e uma ferramenta poderosa de aprendizado e transformacao..."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. RECOMENDACOES -->
+  <section id="recomendacoes" class="fade">
+    <div class="container">
+      <div class="section-tag" data-editable>Plano de acao sugerido</div>
+      <h2 data-editable>Priorizar melhorias de experiencia sem descaracterizar o formato aprovado pelo publico</h2>
+      <div class="rec-grid">
+
+        <div class="rec-card alta">
+          <div class="rec-prio" data-editable>Alta</div>
+          <h4 data-editable>Experiencia musical</h4>
+          <p data-editable>Reavaliar formato musical: testar banda ao vivo integrada ao DJ ou curadoria musical por perfil do publico.</p>
+          <small data-editable>Musica/DJ foi o item de menor media (3,95/5) e apareceu de forma recorrente nos comentarios.</small>
+        </div>
+
+        <div class="rec-card alta">
+          <div class="rec-prio" data-editable>Alta</div>
+          <h4 data-editable>Integracao</h4>
+          <p data-editable>Planejar ativacoes leves na confraternizacao: momentos conduzidos, dinamica de integracao, estimulo a pista e reconhecimento coletivo.</p>
+          <small data-editable>Comentarios sugerem maior interacao; item de interacao ficou abaixo dos principais destaques.</small>
+        </div>
+
+        <div class="rec-card media">
+          <div class="rec-prio" data-editable>Media</div>
+          <h4 data-editable>Bebidas e cardapio</h4>
+          <p data-editable>Ampliar diversidade e equilibrio do cardapio de bebidas e avaliar opcoes mais leves no almoco.</p>
+          <small data-editable>Bebidas e diversidade de cardapio ficaram entre os menores desempenhos relativos.</small>
+        </div>
+
+        <div class="rec-card media">
+          <div class="rec-prio" data-editable>Media</div>
+          <h4 data-editable>Tempo de palestras</h4>
+          <p data-editable>Revisar duracao por apresentacao, com timebox mais rigido e foco em mensagens essenciais.</p>
+          <small data-editable>Tempo de cada apresentacao e tempo total das palestras foram os menores itens do bloco de palestras.</small>
+        </div>
+
+        <div class="rec-card">
+          <div class="rec-prio" data-editable>Baixa</div>
+          <h4 data-editable>Conforto e descompressao</h4>
+          <p data-editable>Avaliar pequenos diferenciais de conforto, como espacos de descompressao e itens de apoio, quando compativel com orcamento.</p>
+          <small data-editable>Sugestoes abertas mencionaram conforto, descompressao e acoes de apoio aos participantes.</small>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- RODAPE -->
+  <footer>
+    <div class="container">
+      <strong data-editable>Pesquisa de Satisfacao - Evento de Planejamento REGAP/IE 2026</strong><br>
+      <span data-editable>Relatorio gerado a partir da exportacao do Microsoft Forms. As respostas sao anonimas.</span>
+    </div>
+  </footer>
+
+  <!-- BOTOES FLUTUANTES -->
+  <div class="fab-group">
+    <button class="fab save" id="btnSave"  onclick="saveFile()">Salvar arquivo</button>
+    <button class="fab"      id="btnEdit"  onclick="toggleEditMode()">Modo de edicao</button>
+    <button class="fab"      id="btnPrint" onclick="window.print()">Exportar PDF</button>
+  </div>
+
+  <!-- ============================================================
+       SCRIPTS
+       ============================================================ -->
+  <script>
+
+    /* ----------------------------------------------------------
+       DADOS DA PESQUISA
+       ---------------------------------------------------------- */
+    const blocks = [
+      { bloco: "Almoco",           media: 4.7976190476190474, participantes: 42 },
+      { bloco: "Palestras",        media: 4.7735191637630665, participantes: 41 },
+      { bloco: "Confraternizacao", media: 4.661111111111111,  participantes: 40 }
+    ];
+
+    const topItems = [
+      { bloco: "Confraternizacao", item: "Estrutura da confraternizacao", media: 4.9,                pct_positivo: 1.0   },
+      { bloco: "Almoco",           item: "Local do almoco",               media: 4.880952380952381,  pct_positivo: 1.0   },
+      { bloco: "Palestras",        item: "Relevancia do conteudo",        media: 4.878048780487805,  pct_positivo: 1.0   },
+      { bloco: "Palestras",        item: "Coffee break",                  media: 4.878048780487805,  pct_positivo: 1.0   },
+      { bloco: "Confraternizacao", item: "Local da confraternizacao",     media: 4.875,              pct_positivo: 0.975 }
+    ];
+
+    const bottomItems = [
+      { bloco: "Confraternizacao", item: "Musica / DJ",                      media: 3.95,              pct_positivo: 0.7                  },
+      { bloco: "Palestras",        item: "Tempo por apresentacao",           media: 4.560975609756097, pct_positivo: 0.9024390243902439   },
+      { bloco: "Palestras",        item: "Tempo total das palestras",        media: 4.585365853658536, pct_positivo: 0.9024390243902439   },
+      { bloco: "Confraternizacao", item: "Qualidade das bebidas - confrat.", media: 4.625,             pct_positivo: 0.9                  },
+      { bloco: "Confraternizacao", item: "Diversidade do cardapio",          media: 4.65,              pct_positivo: 0.9                  },
+      { bloco: "Almoco",           item: "Qualidade das bebidas - almoco",   media: 4.666666666666667, pct_positivo: 0.9761904761904762   }
+    ];
+
+    const themes = [
+      ["Elogios a organizacao e conducao",     22],
+      ["Sem apontamentos relevantes",          10],
+      ["Interacao e atividades de integracao",  7],
+      ["Musica/DJ e banda ao vivo",             6],
+      ["Outros / observacoes pontuais",         6],
+      ["Tempo/duracao das palestras",           5],
+      ["Bebidas, cardapio e alimentacao",       5],
+      ["Conforto, logistica e espacos",         5]
+    ];
+
+    const ratings = { "5": 1, "8": 3, "9": 8, "10": 28 };
+
+    /* ----------------------------------------------------------
+       UTILITARIOS DE RENDERIZACAO
+       ---------------------------------------------------------- */
+
+    function fmt(n, d = 2) {
+      return Number(n).toFixed(d).replace('.', ',');
+    }
+
+    function renderBar(container, label, value, max, cls) {
+      max = max || 5;
+      cls = cls || '';
+      const w = Math.max(0, Math.min(100, value / max * 100));
+      container.insertAdjacentHTML('beforeend',
+        '<div class="bar-row">' +
+          '<div class="bar-label">' + label + '</div>' +
+          '<div class="bar-track">' +
+            '<div class="bar-fill ' + cls + '" data-width="' + w + '%"></div>' +
+          '</div>' +
+          '<div class="bar-value">' + fmt(value) + '</div>' +
+        '</div>'
+      );
+    }
+
+    function countup(el) {
+      const target = parseFloat(el.dataset.count);
+      const suffix  = el.dataset.suffix || '';
+      var i = 0, steps = 55;
+      var timer = setInterval(function() {
+        i++;
+        var val = target * i / steps;
+        el.textContent = (target >= 20 ? fmt(val, 1) : fmt(val, 2)) + suffix;
+        if (i >= steps) {
+          el.textContent = (target >= 20 ? fmt(target, 1) : fmt(target, 2)) + suffix;
+          clearInterval(timer);
+        }
+      }, 18);
+    }
+
+    /* ----------------------------------------------------------
+       INICIALIZACAO DOS GRAFICOS
+       ---------------------------------------------------------- */
+    function initCharts() {
+      var bb = document.getElementById('blockBars');
+      bb.innerHTML = '';
+      blocks.forEach(function(b) { renderBar(bb, b.bloco, b.media, 5, b.media < 4.7 ? 'orange' : ''); });
+
+      var rb  = document.getElementById('ratingBars');
+      rb.innerHTML = '';
+      var maxR = Math.max.apply(null, Object.values(ratings));
+      Object.keys(ratings).forEach(function(k) { renderBar(rb, 'Nota ' + k, ratings[k], maxR, k < 8 ? 'orange' : ''); });
+
+      var tb    = document.getElementById('themeBars');
+      tb.innerHTML = '';
+      var maxTh = Math.max.apply(null, themes.map(function(x) { return x[1]; }));
+      themes.forEach(function(t) { renderBar(tb, t[0], t[1], maxTh, t[0].indexOf('Musica') >= 0 ? 'orange' : ''); });
+
+      var top = document.getElementById('topCards');
+      top.innerHTML = '';
+      topItems.forEach(function(i) {
+        top.insertAdjacentHTML('beforeend',
+          '<div class="rank-card">' +
+            '<span class="score-pill">' + fmt(i.media) + '/5</span>' +
+            '<h4>' + i.item + '</h4>' +
+            '<p>' + i.bloco + ' &middot; ' + fmt(i.pct_positivo * 100, 1) + '% Bom+Excelente</p>' +
+          '</div>'
+        );
+      });
+
+      var bot = document.getElementById('bottomCards');
+      bot.innerHTML = '';
+      bottomItems.forEach(function(i) {
+        bot.insertAdjacentHTML('beforeend',
+          '<div class="rank-card opp">' +
+            '<span class="score-pill">' + fmt(i.media) + '/5</span>' +
+            '<h4>' + i.item + '</h4>' +
+            '<p>' + i.bloco + ' &middot; ' + fmt(i.pct_positivo * 100, 1) + '% Bom+Excelente</p>' +
+          '</div>'
+        );
+      });
+
+      setTimeout(function() {
+        document.querySelectorAll('.bar-fill').forEach(function(x) { x.style.width = x.dataset.width; });
+      }, 350);
+    }
+
+    /* ----------------------------------------------------------
+       MODO DE EDICAO
+       ---------------------------------------------------------- */
+    var editMode   = false;
+    var fileHandle = null;
+
+    function toggleEditMode() {
+      editMode = !editMode;
+      document.body.classList.toggle('edit-mode', editMode);
+
+      var btnEdit = document.getElementById('btnEdit');
+      var btnSave = document.getElementById('btnSave');
+
+      if (editMode) {
+        btnEdit.textContent = 'Sair da edicao';
+        btnEdit.classList.add('active');
+        btnSave.style.display = 'block';
+        document.querySelectorAll('[data-editable]').forEach(function(el) {
+          el.contentEditable = 'true';
+          el.spellcheck      = false;
+        });
+      } else {
+        btnEdit.textContent = 'Modo de edicao';
+        btnEdit.classList.remove('active');
+        btnSave.style.display = 'none';
+        document.querySelectorAll('[data-editable]').forEach(function(el) {
+          el.contentEditable = 'false';
+        });
+      }
+    }
+
+    function serializeHTML() {
+      var clone = document.documentElement.cloneNode(true);
+
+      clone.querySelectorAll('[contenteditable]').forEach(function(el) {
+        el.removeAttribute('contenteditable');
+        el.removeAttribute('spellcheck');
+      });
+
+      ['blockBars', 'ratingBars', 'themeBars', 'topCards', 'bottomCards'].forEach(function(id) {
+        var el = clone.querySelector('#' + id);
+        if (el) el.innerHTML = '';
+      });
+
+      clone.querySelectorAll('.bar-fill').forEach(function(el) { el.style.removeProperty('width'); });
+      clone.querySelectorAll('.fade').forEach(function(el) { el.classList.remove('visible'); });
+
+      return '<!DOCTYPE html>\n' + clone.outerHTML;
+    }
+
+    function saveFile() {
+      var html = serializeHTML();
+      var blob = new Blob([html], { type: 'text/html' });
+
+      if (window.showSaveFilePicker) {
+        window.showSaveFilePicker({
+          suggestedName: 'eventoie2026.html',
+          types: [{ description: 'Arquivo HTML', accept: { 'text/html': ['.html'] } }]
+        }).then(function(handle) {
+          fileHandle = handle;
+          return handle.createWritable();
+        }).then(function(writable) {
+          return writable.write(blob).then(function() { return writable.close(); });
+        }).then(function() {
+          flashSaveBtn('Salvo!');
+        }).catch(function(err) {
+          if (err.name !== 'AbortError') downloadFallback(blob);
+        });
+      } else {
+        downloadFallback(blob);
+      }
+    }
+
+    function downloadFallback(blob) {
+      var a   = document.createElement('a');
+      a.href     = URL.createObjectURL(blob);
+      a.download = 'eventoie2026.html';
+      a.click();
+      URL.revokeObjectURL(a.href);
+      flashSaveBtn('Baixado!');
+    }
+
+    function flashSaveBtn(msg) {
+      var btn  = document.getElementById('btnSave');
+      var prev = btn.textContent;
+      btn.textContent = msg;
+      setTimeout(function() { btn.textContent = prev; }, 2200);
+    }
+
+    /* ----------------------------------------------------------
+       INTERSECTION OBSERVER — animacoes de entrada
+       ---------------------------------------------------------- */
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.14 });
+
+    document.querySelectorAll('.fade').forEach(function(el) { observer.observe(el); });
+
+    /* ----------------------------------------------------------
+       INICIALIZACAO
+       ---------------------------------------------------------- */
+    document.querySelectorAll('.num').forEach(countup);
+    initCharts();
+
+  </script>
+</body>
+</html>
