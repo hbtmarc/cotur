@@ -338,6 +338,30 @@
       white-space: nowrap;
       letter-spacing: .02em;
     }
+    .file-health {
+      border: none;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .02em;
+      cursor: pointer;
+      transition: transform .12s ease, filter .12s ease;
+    }
+    .file-health:hover { transform: translateY(-1px); filter: brightness(0.98); }
+    .file-health.ok      { background: #e8f6eb; color: #1b7a33; }
+    .file-health.warn    { background: #fff4de; color: #8a5a00; }
+    .file-health.error   { background: #fde8e8; color: #a42828; }
+    .arq-validation-box {
+      display: none;
+      margin-top: 6px;
+      font-size: 12px;
+      line-height: 1.6;
+      border: 1px solid var(--gray200);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: #fff;
+    }
     /* Botões de ação do rodapé */
     .panel-action {
       width: 100%;
@@ -906,7 +930,8 @@
     body.pres-mode #props-panel,
     body.pres-mode header,
     body.pres-mode footer,
-    body.pres-mode #editor-toast { display: none !important; }
+    body.pres-mode #editor-toast,
+    body.pres-mode #file-health-indicator { display: none !important; }
 
     /* --- Seções em modo apresentação: fora do foco ficam ocultas */
     body.pres-mode section[data-section-id] {
@@ -1017,6 +1042,7 @@
       #props-panel,
       #pres-bar,
       #editor-toast,
+      #file-health-indicator,
       #tab-arquivo, #props-arquivo,
       #tab-dados,   #props-dados     { display: none !important; }
 
@@ -1069,21 +1095,21 @@
 
   <!-- TOOLBAR FLUTUANTE DE SECAO -->
   <div id="section-toolbar">
-    <button id="tb-up"        onclick="sectionMove('up')">&#8593; Subir</button>
-    <button id="tb-down"      onclick="sectionMove('down')">&#8595; Descer</button>
-    <button id="tb-hide"      onclick="sectionToggleHide()">Ocultar</button>
+    <button id="tb-up" onclick="sectionMove('up')">↑ Subir</button>
+    <button id="tb-down" onclick="sectionMove('down')">↓ Descer</button>
+    <button id="tb-hide" onclick="sectionToggleHide()">Ocultar</button>
     <button id="tb-duplicate" onclick="sectionDuplicate()">Duplicar</button>
-    <button id="tb-delete"    onclick="sectionDelete()" style="background:rgba(192,57,43,.55)">Excluir</button>
+    <button id="tb-delete" onclick="sectionDelete()" style="background:rgba(192,57,43,.55)">Excluir</button>
   </div>
 
   <!-- TOOLBAR FLUTUANTE DE BLOCO -->
   <div id="block-toolbar">
     <span id="block-toolbar-type" style="font-size:10px;opacity:.65;color:#fff;padding:0 4px 0 2px"></span>
-    <button id="btb-up"        onclick="blockMove('up')">&#8593; Subir</button>
-    <button id="btb-down"      onclick="blockMove('down')">&#8595; Descer</button>
-    <button id="btb-hide"      onclick="blockToggleHide()">Ocultar</button>
+    <button id="btb-up" onclick="blockMove('up')">↑ Subir</button>
+    <button id="btb-down" onclick="blockMove('down')">↓ Descer</button>
+    <button id="btb-hide" onclick="blockToggleHide()">Ocultar</button>
     <button id="btb-duplicate" onclick="blockDuplicate()">Duplicar</button>
-    <button id="btb-delete"    onclick="blockDelete()" style="background:rgba(192,57,43,.55)">Excluir</button>
+    <button id="btb-delete" onclick="blockDelete()" style="background:rgba(192,57,43,.55)">Excluir</button>
   </div>
 
   <!-- PAINEL DE PROPRIEDADES -->
@@ -1091,18 +1117,18 @@
     <div class="props-header">Propriedades</div>
     <!-- Abas: Seção | Bloco | Tema -->
     <div class="props-tabs">
-      <button class="props-tab active" id="tab-secao"  onclick="switchPropsTab('secao')">Seção</button>
-      <button class="props-tab"        id="tab-bloco"  onclick="switchPropsTab('bloco')">Bloco</button>
-      <button class="props-tab"        id="tab-tema"   onclick="switchPropsTab('tema')">Tema</button>
-      <button class="props-tab"        id="tab-add"    onclick="switchPropsTab('add')">+ Inserir</button>
-      <button class="props-tab"        id="tab-arquivo" onclick="switchPropsTab('arquivo')">Arquivo</button>
-      <button class="props-tab"        id="tab-dados"  onclick="switchPropsTab('dados')">Dados</button>
+      <button class="props-tab active" id="tab-secao" onclick="switchPropsTab('secao')">Seção</button>
+      <button class="props-tab" id="tab-bloco" onclick="switchPropsTab('bloco')">Bloco</button>
+      <button class="props-tab" id="tab-tema" onclick="switchPropsTab('tema')">Tema</button>
+      <button class="props-tab" id="tab-add" onclick="switchPropsTab('add')">+ Inserir</button>
+      <button class="props-tab" id="tab-arquivo" onclick="switchPropsTab('arquivo')">Arquivo</button>
+      <button class="props-tab" id="tab-dados" onclick="switchPropsTab('dados')">Dados</button>
     </div>
 
     <!-- ÁREA DE CONTEUDO ROLAVEL (ocupa todo o espaço entre as abas e o rodapé) -->
     <div class="props-scroll">
 
-    <div id="props-empty" class="props-empty">Selecione uma seção para editar suas propriedades.</div>
+    <div id="props-empty" class="props-empty" style="display: block;">Selecione uma seção para editar suas propriedades.</div>
 
     <!-- PROPRIEDADES DE SECAO -->
     <div id="props-content" style="display:none">
@@ -1130,13 +1156,13 @@
       </div>
       <div class="props-sep"></div>
       <div class="props-field props-check">
-        <label><input type="checkbox" id="prop-show-tag"     onchange="propToggle('tag',this.checked)"> Mostrar marcador</label>
+        <label><input type="checkbox" id="prop-show-tag" onchange="propToggle('tag',this.checked)"> Mostrar marcador</label>
       </div>
       <div class="props-field props-check">
-        <label><input type="checkbox" id="prop-show-title"   onchange="propToggle('titleEl',this.checked)"> Mostrar título</label>
+        <label><input type="checkbox" id="prop-show-title" onchange="propToggle('titleEl',this.checked)"> Mostrar título</label>
       </div>
       <div class="props-field props-check">
-        <label><input type="checkbox" id="prop-show-lead"    onchange="propToggle('lead',this.checked)"> Mostrar texto introdutório</label>
+        <label><input type="checkbox" id="prop-show-lead" onchange="propToggle('lead',this.checked)"> Mostrar texto introdutório</label>
       </div>
       <div class="props-field props-check">
         <label><input type="checkbox" id="prop-show-divider" onchange="propToggle('divider',this.checked)"> Mostrar separador inferior</label>
@@ -1167,9 +1193,9 @@
       <div class="props-field">
         <label class="props-label">Largura do conteúdo</label>
         <div class="props-mini-grid">
-          <button class="props-mini-btn" id="sec-width-compact"  onclick="sectionPropWidth('compact')">Compacto</button>
+          <button class="props-mini-btn" id="sec-width-compact" onclick="sectionPropWidth('compact')">Compacto</button>
           <button class="props-mini-btn active" id="sec-width-normal" onclick="sectionPropWidth('normal')">Normal</button>
-          <button class="props-mini-btn" id="sec-width-wide"    onclick="sectionPropWidth('wide')">Largo</button>
+          <button class="props-mini-btn" id="sec-width-wide" onclick="sectionPropWidth('wide')">Largo</button>
         </div>
       </div>
     </div>
@@ -1260,8 +1286,8 @@
       <div class="props-field">
         <label class="props-label">Sombra</label>
         <div class="props-mini-grid">
-          <button class="props-mini-btn" id="blk-shadow-none"   onclick="blockPropShadow('none')">Nenhuma</button>
-          <button class="props-mini-btn" id="blk-shadow-light"  onclick="blockPropShadow('light')">Leve</button>
+          <button class="props-mini-btn" id="blk-shadow-none" onclick="blockPropShadow('none')">Nenhuma</button>
+          <button class="props-mini-btn" id="blk-shadow-light" onclick="blockPropShadow('light')">Leve</button>
           <button class="props-mini-btn" id="blk-shadow-medium" onclick="blockPropShadow('medium')">Média</button>
           <button class="props-mini-btn" id="blk-shadow-strong" onclick="blockPropShadow('strong')">Forte</button>
         </div>
@@ -1269,7 +1295,7 @@
     </div>
 
     <!-- PAINEL DE TEMA GLOBAL -->
-    <div id="props-theme" style="display:none">
+    <div id="props-theme" style="display: none;">
 
       <!-- Presets de tema -->
       <div class="props-field">
@@ -1347,9 +1373,7 @@
       <!-- Raio dos cards -->
       <div class="props-field">
         <label class="props-label">Raio dos cards (px) — <span id="tv-radius-val">14</span>px</label>
-        <input type="range" id="tv-radius" min="0" max="28" step="2" value="14"
-          style="width:100%;margin-top:4px;accent-color:var(--blue2)"
-          oninput="applyThemeRadius(this.value)">
+        <input type="range" id="tv-radius" min="0" max="28" step="2" value="14" style="width:100%;margin-top:4px;accent-color:var(--blue2)" oninput="applyThemeRadius(this.value)">
       </div>
 
       <!-- Intensidade da sombra -->
@@ -1410,14 +1434,14 @@
       <!-- Estado dirty / limpo -->
       <div class="arq-section">
         <div class="arq-section-title">Estado do projeto</div>
-        <div id="arq-dirty-status" class="arq-status">✓ Projeto salvo</div>
+        <div id="arq-dirty-status" class="arq-status dirty">● Alterações não salvas</div>
       </div>
       <div class="props-sep"></div>
 
       <!-- Salvamento automático (status atualizado pelo autosave) -->
       <div class="arq-section">
         <div class="arq-section-title">Salvamento automático</div>
-        <div id="arq-draft-status" class="arq-status">Nenhum rascunho salvo</div>
+        <div id="arq-draft-status" class="arq-status">Rascunho salvo às 09:01</div>
       </div>
       <div class="props-sep"></div>
 
@@ -1425,8 +1449,8 @@
       <div class="arq-section">
         <div class="arq-section-title">Rascunho local</div>
       </div>
-      <button class="arq-btn primary" onclick="restoreDraft()">&#8635; Restaurar rascunho</button>
-      <button class="arq-btn danger" onclick="clearDraftStorage()">&#128465; Limpar rascunho</button>
+      <button class="arq-btn primary" onclick="restoreDraft()">↻ Restaurar rascunho</button>
+      <button class="arq-btn danger" onclick="clearDraftStorage()">🗑 Limpar rascunho</button>
       <div class="props-sep"></div>
 
       <!-- Histórico de versões (até 10 snapshots manuais) -->
@@ -1442,8 +1466,8 @@
       <div class="arq-section">
         <div class="arq-section-title">Exportar / importar projeto</div>
       </div>
-      <button class="arq-btn" onclick="exportProjetoJSON()">&#8659; Exportar projeto .json</button>
-      <label class="arq-btn" style="cursor:pointer">&#8657; Importar projeto .json
+      <button class="arq-btn" onclick="exportProjetoJSON()">⇓ Exportar projeto .json</button>
+      <label class="arq-btn" style="cursor:pointer">⇑ Importar projeto .json
         <input type="file" accept=".json" style="display:none" onchange="importProjetoJSON(this)">
       </label>
       <div class="props-sep"></div>
@@ -1452,9 +1476,10 @@
       <div class="arq-section">
         <div class="arq-section-title">Diagnóstico</div>
       </div>
-      <button class="arq-btn" onclick="validarEstrutura()">&#128270; Validar estrutura</button>
+      <button class="arq-btn" onclick="validarEstrutura()">🔎 Validar estrutura</button>
+      <button class="arq-btn" onclick="corrigirEstruturaAutomaticamente()">⚙ Corrigir automaticamente</button>
       <!-- Resultado da validação — preenchido por validarEstrutura() -->
-      <div id="arq-validation-result" style="display:none;margin-top:6px;font-size:12px;line-height:1.6"></div>
+      <div id="arq-validation-result" class="arq-validation-box" style="display: none;"></div>
 
     </div>  <!-- fim #props-arquivo -->
 
@@ -1484,16 +1509,14 @@
 
       <!-- Botões principais -->
       <div class="dados-main-btns">
-        <button class="dados-btn-apply"   onclick="dadosAplicar()">✓ Aplicar dados</button>
+        <button class="dados-btn-apply" onclick="dadosAplicar()">✓ Aplicar dados</button>
         <button class="dados-btn-restore" onclick="dadosRestaurar()">↺ Restaurar dados originais</button>
       </div>
 
       <!-- Editor JSON avançado (colapsado por padrão) -->
-      <button class="dados-json-toggle" id="dados-json-toggle"
-              onclick="dadosToggleJSON()">▶ Editor JSON avançado</button>
+      <button class="dados-json-toggle" id="dados-json-toggle" onclick="dadosToggleJSON()">▶ Editor JSON avançado</button>
       <div class="dados-json-area" id="dados-json-area">
-        <textarea id="dados-json-textarea"
-                  placeholder="JSON do conjunto de dados selecionado..."></textarea>
+        <textarea id="dados-json-textarea" placeholder="JSON do conjunto de dados selecionado..."></textarea>
         <button class="dados-json-apply" onclick="dadosAplicarJSON()">Aplicar JSON</button>
       </div>
 
@@ -1504,12 +1527,13 @@
     <!-- RODAPÉ FIXO — fora da área de rolagem, sempre visível no fundo do painel -->
     <div class="panel-footer">
       <span class="save-status" id="saveStatus">Nenhum arquivo vinculado</span>
-      <button class="panel-action primary"   id="btnSalvar"     onclick="salvar()">&#128190; Salvar</button>
+      <button class="file-health ok" id="file-health-indicator" onclick="abrirSaudeArquivo()" style="display: none;">Estrutura OK</button>
+      <button class="panel-action primary" id="btnSalvar" onclick="salvar()">💾 Salvar</button>
       <button class="panel-action secondary" id="btnSalvarComo" onclick="salvarComo()">Salvar como…</button>
-      <button class="panel-action"           id="btnBaixar"     onclick="baixarCopia()">&#11015; Baixar cópia</button>
+      <button class="panel-action" id="btnBaixar" onclick="baixarCopia()">⬇ Baixar cópia</button>
       <div style="height:1px;background:var(--gray200);margin:2px 0"></div>
-      <button class="panel-action" style="background:var(--orange);color:white;border-color:var(--orange)" onclick="toggleEditMode()">&#128065; Visualizar apresentação</button>
-      <button class="panel-action" onclick="exportarPDF()">&#128438; Exportar PDF</button>
+      <button class="panel-action" style="background:var(--orange);color:white;border-color:var(--orange)" onclick="toggleEditMode()">👁 Visualizar apresentação</button>
+      <button class="panel-action" onclick="exportarPDF()">🖶 Exportar PDF</button>
     </div>
 
   </div>  <!-- fim #props-panel -->
@@ -1545,29 +1569,29 @@
       <p class="lead" data-editable="">Os indicadores mostram uma percepcao geral muito positiva. A analise critica, porem, aponta que a proxima edicao pode ganhar qualidade ao priorizar musica/entretenimento, integracao e refinamento do cardapio de bebidas.</p>
 
       <div class="kpi-grid">
-        <div class="kpi">
+        <div class="kpi" data-block-id="blk-1" data-block-type="kpi" data-block-visible="true">
           <div class="num" data-count="42">42,0</div>
           <div class="label" data-editable="">Respostas obtidas</div>
           <small data-editable="">Meta de referencia: 52</small>
         </div>
-        <div class="kpi">
+        <div class="kpi" data-block-id="blk-2" data-block-type="kpi" data-block-visible="true">
           <div class="num" data-count="80.8" data-suffix="%">80,8%</div>
           <div class="label" data-editable="">Aderencia da pesquisa</div>
           <small data-editable="">base esperada de 52 participantes</small>
         </div>
-        <div class="kpi">
+        <div class="kpi" data-block-id="blk-3" data-block-type="kpi" data-block-visible="true">
           <div class="num" data-count="9.53">9,53</div>
           <div class="label" data-editable="">Satisfacao geral /10</div>
           <small data-editable="">40 respostas validas</small>
         </div>
-        <div class="kpi">
+        <div class="kpi" data-block-id="blk-4" data-block-type="kpi" data-block-visible="true">
           <div class="num" data-count="97.5" data-suffix="%">97,5%</div>
           <div class="label" data-editable="">Participaria novamente</div>
           <small data-editable="">39 de 40 respostas validas</small>
         </div>
       </div>
 
-      <div class="insight">
+      <div class="insight" data-block-id="blk-5" data-block-type="insight" data-block-visible="true">
         <div>⚠</div>
         <div data-editable=""><strong>Leitura critica:</strong> a media geral e alta, mas a variacao entre itens revela um ponto claro de acao: Musica/DJ foi o item mais sensivel, com 3,95/5.</div>
       </div>
@@ -1577,11 +1601,11 @@
       <div class="section-tag" data-editable="">Análise por bloco</div>
       <h2 data-editable="">Almoco e palestras lideram a avaliacao; confraternizacao segue positiva, porem com mais oportunidades</h2>
       <div class="grid2">
-        <div class="panel">
+        <div class="panel" data-block-id="blk-6" data-block-type="panel" data-block-visible="true">
           <h3 data-editable="">Media por bloco</h3>
           <div id="blockBars"></div>
         </div>
-        <div class="panel">
+        <div class="panel" data-block-id="blk-7" data-block-type="panel" data-block-visible="true">
           <h3 data-editable="">Distribuicao da satisfacao geral</h3>
           <div id="ratingBars"></div>
         </div>
@@ -1616,29 +1640,29 @@
       <div class="section-tag" data-editable="">Voz dos participantes</div>
       <h2 data-editable="">Comentarios reforcam elogios a organizacao e sinalizam melhorias em musica, integracao e cardapio</h2>
       <div class="theme-wrap">
-        <div class="panel">
+        <div class="panel" data-block-id="blk-8" data-block-type="panel" data-block-visible="true">
           <h3 data-editable="">Mencoes por tema</h3>
           <div id="themeBars"></div>
         </div>
         <div>
           <h3 style="color:var(--blue);margin-bottom:14px" data-editable="">Trechos representativos</h3>
-          <div class="quote">
+          <div class="quote" data-block-id="blk-9" data-block-type="quote" data-block-visible="true">
             <span data-editable="">Elogios a organizacao e conducao</span>
             <p data-editable="">"Otimo evento. Parabens pela organizacao."</p>
           </div>
-          <div class="quote">
+          <div class="quote" data-block-id="blk-10" data-block-type="quote" data-block-visible="true">
             <span data-editable="">Musica/DJ e banda ao vivo</span>
             <p data-editable="">"Diminuir o tempo de palestras, contratar banda junto com DJ"</p>
           </div>
-          <div class="quote">
+          <div class="quote" data-block-id="blk-11" data-block-type="quote" data-block-visible="true">
             <span data-editable="">Bebidas, cardapio e alimentacao</span>
             <p data-editable="">"Almoco com opcoes mais leves."</p>
           </div>
-          <div class="quote">
+          <div class="quote" data-block-id="blk-12" data-block-type="quote" data-block-visible="true">
             <span data-editable="">Interacao e atividades de integracao</span>
             <p data-editable="">"O evento agrega nivelando informacoes, metas, desafios e fortalecendo o espirito de equipe."</p>
           </div>
-          <div class="quote">
+          <div class="quote" data-block-id="blk-13" data-block-type="quote" data-block-visible="true">
             <span data-editable="">Tempo/duracao das palestras</span>
             <p data-editable="">"A palestra e uma ferramenta poderosa de aprendizado e transformacao..."</p>
           </div>
@@ -1654,35 +1678,35 @@
       <h2 data-editable="">Priorizar melhorias de experiencia sem descaracterizar o formato aprovado pelo publico</h2>
       <div class="rec-grid">
 
-        <div class="rec-card alta">
+        <div class="rec-card alta" data-block-id="blk-14" data-block-type="rec-card" data-block-visible="true">
           <div class="rec-prio" data-editable="">Alta</div>
           <h4 data-editable="">Experiencia musical</h4>
           <p data-editable="">Reavaliar formato musical: testar banda ao vivo integrada ao DJ ou curadoria musical por perfil do publico.</p>
           <small data-editable="">Musica/DJ foi o item de menor media (3,95/5) e apareceu de forma recorrente nos comentarios.</small>
         </div>
 
-        <div class="rec-card alta">
+        <div class="rec-card alta" data-block-id="blk-15" data-block-type="rec-card" data-block-visible="true">
           <div class="rec-prio" data-editable="">Alta</div>
           <h4 data-editable="">Integracao</h4>
           <p data-editable="">Planejar ativacoes leves na confraternizacao: momentos conduzidos, dinamica de integracao, estimulo a pista e reconhecimento coletivo.</p>
           <small data-editable="">Comentarios sugerem maior interacao; item de interacao ficou abaixo dos principais destaques.</small>
         </div>
 
-        <div class="rec-card media">
+        <div class="rec-card media" data-block-id="blk-16" data-block-type="rec-card" data-block-visible="true">
           <div class="rec-prio" data-editable="">Media</div>
           <h4 data-editable="">Bebidas e cardapio</h4>
           <p data-editable="">Ampliar diversidade e equilibrio do cardapio de bebidas e avaliar opcoes mais leves no almoco.</p>
           <small data-editable="">Bebidas e diversidade de cardapio ficaram entre os menores desempenhos relativos.</small>
         </div>
 
-        <div class="rec-card media">
+        <div class="rec-card media" data-block-id="blk-17" data-block-type="rec-card" data-block-visible="true">
           <div class="rec-prio" data-editable="">Media</div>
           <h4 data-editable="">Tempo de palestras</h4>
           <p data-editable="">Revisar duracao por apresentacao, com timebox mais rigido e foco em mensagens essenciais.</p>
           <small data-editable="">Tempo de cada apresentacao e tempo total das palestras foram os menores itens do bloco de palestras.</small>
         </div>
 
-        <div class="rec-card">
+        <div class="rec-card" data-block-id="blk-18" data-block-type="rec-card" data-block-visible="true">
           <div class="rec-prio" data-editable="">Baixa</div>
           <h4 data-editable="">Conforto e descompressao</h4>
           <p data-editable="">Avaliar pequenos diferenciais de conforto, como espacos de descompressao e itens de apoio, quando compativel com orcamento.</p>
@@ -1710,7 +1734,7 @@
 
   <!-- BARRA DE CONTROLES DA APRESENTAÇÃO (Step 9) -->
   <!-- Visível apenas em body.pres-mode via CSS -->
-  <div id="pres-bar">
+  <div id="pres-bar" style="display: none;">
     <button class="pres-btn" id="pres-prev" onclick="presPrev()" title="Anterior (← ou Page Up)">← Anterior</button>
     <span id="pres-progress">1 / 1</span>
     <button class="pres-btn" id="pres-next" onclick="presNext()" title="Próxima (→ ou Page Down)">Próxima →</button>
@@ -1719,10 +1743,10 @@
   </div>
 
   <!-- Overrides de dados editados pelo usuário — atualizado pelo editor ao aplicar dados -->
-  <script type="application/json" id="presentationDataOverrides">{}</script>
+  <script type="application/json" id="presentationDataOverrides">{"blocks":[{"bloco":"Almoco","media":4.7976190476190474,"participantes":42},{"bloco":"Palestras","media":4.7735191637630665,"participantes":41},{"bloco":"Confraternizacao","media":4.661111111111111,"participantes":40}],"topItems":[{"bloco":"Confraternizacao","item":"Estrutura da confraternizacao","media":4.9,"pct_positivo":1},{"bloco":"Almoco","item":"Local do almoco","media":4.880952380952381,"pct_positivo":1},{"bloco":"Palestras","item":"Relevancia do conteudo","media":4.878048780487805,"pct_positivo":1},{"bloco":"Palestras","item":"Coffee break","media":4.878048780487805,"pct_positivo":1},{"bloco":"Confraternizacao","item":"Local da confraternizacao","media":4.875,"pct_positivo":0.975}],"bottomItems":[{"bloco":"Confraternizacao","item":"Musica / DJ","media":3.95,"pct_positivo":0.7},{"bloco":"Palestras","item":"Tempo por apresentacao","media":4.560975609756097,"pct_positivo":0.9024390243902439},{"bloco":"Palestras","item":"Tempo total das palestras","media":4.585365853658536,"pct_positivo":0.9024390243902439},{"bloco":"Confraternizacao","item":"Qualidade das bebidas - confrat.","media":4.625,"pct_positivo":0.9},{"bloco":"Confraternizacao","item":"Diversidade do cardapio","media":4.65,"pct_positivo":0.9},{"bloco":"Almoco","item":"Qualidade das bebidas - almoco","media":4.666666666666667,"pct_positivo":0.9761904761904762}],"themes":[["Elogios a organizacao e conducao",22],["Sem apontamentos relevantes",10],["Interacao e atividades de integracao",7],["Musica/DJ e banda ao vivo",6],["Outros / observacoes pontuais",6],["Tempo/duracao das palestras",5],["Bebidas, cardapio e alimentacao",5],["Conforto, logistica e espacos",5]],"ratings":{"5":1,"8":3,"9":8,"10":28}}</script>
 
   <!-- Estado central da apresentação (Step 10) — atualizado ao salvar/exportar -->
-  <script type="application/json" id="presentationStateData">{}</script>
+  <script type="application/json" id="presentationStateData">{"appVersion":"1.0","updatedAt":"2026-04-29T12:01:35.556Z","theme":{},"settings":{"editMode":true},"datasets":{"blocks":[{"bloco":"Almoco","media":4.7976190476190474,"participantes":42},{"bloco":"Palestras","media":4.7735191637630665,"participantes":41},{"bloco":"Confraternizacao","media":4.661111111111111,"participantes":40}],"topItems":[{"bloco":"Confraternizacao","item":"Estrutura da confraternizacao","media":4.9,"pct_positivo":1},{"bloco":"Almoco","item":"Local do almoco","media":4.880952380952381,"pct_positivo":1},{"bloco":"Palestras","item":"Relevancia do conteudo","media":4.878048780487805,"pct_positivo":1},{"bloco":"Palestras","item":"Coffee break","media":4.878048780487805,"pct_positivo":1},{"bloco":"Confraternizacao","item":"Local da confraternizacao","media":4.875,"pct_positivo":0.975}],"bottomItems":[{"bloco":"Confraternizacao","item":"Musica / DJ","media":3.95,"pct_positivo":0.7},{"bloco":"Palestras","item":"Tempo por apresentacao","media":4.560975609756097,"pct_positivo":0.9024390243902439},{"bloco":"Palestras","item":"Tempo total das palestras","media":4.585365853658536,"pct_positivo":0.9024390243902439},{"bloco":"Confraternizacao","item":"Qualidade das bebidas - confrat.","media":4.625,"pct_positivo":0.9},{"bloco":"Confraternizacao","item":"Diversidade do cardapio","media":4.65,"pct_positivo":0.9},{"bloco":"Almoco","item":"Qualidade das bebidas - almoco","media":4.666666666666667,"pct_positivo":0.9761904761904762}],"themes":[["Elogios a organizacao e conducao",22],["Sem apontamentos relevantes",10],["Interacao e atividades de integracao",7],["Musica/DJ e banda ao vivo",6],["Outros / observacoes pontuais",6],["Tempo/duracao das palestras",5],["Bebidas, cardapio e alimentacao",5],["Conforto, logistica e espacos",5]],"ratings":{"5":1,"8":3,"9":8,"10":28}},"sectionsSummary":[{"id":"visao","order":0,"title":"Evento amplamente bem avaliado, com oportunidade concentrada na experiencia da confraternizacao","visible":true,"style":"","blocks":[{"id":"blk-1","type":"kpi","visible":true,"style":""},{"id":"blk-2","type":"kpi","visible":true,"style":""},{"id":"blk-3","type":"kpi","visible":true,"style":""},{"id":"blk-4","type":"kpi","visible":true,"style":""},{"id":"blk-5","type":"insight","visible":true,"style":""}]},{"id":"blocos","order":1,"title":"Almoco e palestras lideram a avaliacao; confraternizacao segue positiva, porem com mais oportunidades","visible":true,"style":"","blocks":[{"id":"blk-6","type":"panel","visible":true,"style":""},{"id":"blk-7","type":"panel","visible":true,"style":""}]},{"id":"ranking","order":2,"title":"O que deve ser preservado e o que merece ajuste na proxima edicao","visible":true,"style":"","blocks":[{"id":"top-card-0","type":"rank-card","visible":true,"style":""},{"id":"top-card-1","type":"rank-card","visible":true,"style":""},{"id":"top-card-2","type":"rank-card","visible":true,"style":""},{"id":"top-card-3","type":"rank-card","visible":true,"style":""},{"id":"top-card-4","type":"rank-card","visible":true,"style":""},{"id":"bot-card-0","type":"rank-card","visible":true,"style":""},{"id":"bot-card-1","type":"rank-card","visible":true,"style":""},{"id":"bot-card-2","type":"rank-card","visible":true,"style":""},{"id":"bot-card-3","type":"rank-card","visible":true,"style":""},{"id":"bot-card-4","type":"rank-card","visible":true,"style":""},{"id":"bot-card-5","type":"rank-card","visible":true,"style":""}]},{"id":"qualitativo","order":3,"title":"Comentarios reforcam elogios a organizacao e sinalizam melhorias em musica, integracao e cardapio","visible":true,"style":"","blocks":[{"id":"blk-8","type":"panel","visible":true,"style":""},{"id":"blk-9","type":"quote","visible":true,"style":""},{"id":"blk-10","type":"quote","visible":true,"style":""},{"id":"blk-11","type":"quote","visible":true,"style":""},{"id":"blk-12","type":"quote","visible":true,"style":""},{"id":"blk-13","type":"quote","visible":true,"style":""}]},{"id":"recomendacoes","order":4,"title":"Priorizar melhorias de experiencia sem descaracterizar o formato aprovado pelo publico","visible":true,"style":"","blocks":[{"id":"blk-14","type":"rec-card","visible":true,"style":""},{"id":"blk-15","type":"rec-card","visible":true,"style":""},{"id":"blk-16","type":"rec-card","visible":true,"style":""},{"id":"blk-17","type":"rec-card","visible":true,"style":""},{"id":"blk-18","type":"rec-card","visible":true,"style":""}]}]}</script>
 
   <!-- ============================================================
        SCRIPTS
@@ -1767,6 +1791,7 @@
     ];
 
     var ratings = { "5": 1, "8": 3, "9": 8, "10": 28 };
+    var _PRESENTATION_STATE_BOOT = null;
 
     /* ----------------------------------------------------------
        DADOS ORIGINAIS — cópia imutável para restauração
@@ -1796,7 +1821,20 @@
         if (data.themes)      themes      = data.themes;
         if (data.ratings)     ratings     = data.ratings;
       } catch(e) {
-        console.warn('Não foi possível carregar os overrides de dados:', e);
+        console.warn('[PresentationEditor] Não foi possível carregar os overrides de dados:', e);
+      }
+    })();
+
+    /* ----------------------------------------------------------
+       CARREGAR presentationState salvo (quando existir)
+       ---------------------------------------------------------- */
+    (function() {
+      var st = document.getElementById('presentationStateData');
+      if (!st || !st.textContent.trim() || st.textContent.trim() === '{}') return;
+      try {
+        _PRESENTATION_STATE_BOOT = JSON.parse(st.textContent);
+      } catch (e) {
+        console.warn('[PresentationEditor] presentationStateData inválido no carregamento:', e.message);
       }
     })();
 
@@ -1843,55 +1881,70 @@
        ---------------------------------------------------------- */
     function initCharts() {
       var bb = document.getElementById('blockBars');
-      bb.innerHTML = '';
-      blocks.forEach(function(b) { renderBar(bb, b.bloco, b.media, 5, b.media < 4.7 ? 'orange' : ''); });
+      if (bb) {
+        bb.innerHTML = '';
+        blocks.forEach(function(b) { renderBar(bb, b.bloco, b.media, 5, b.media < 4.7 ? 'orange' : ''); });
+      }
 
       var rb  = document.getElementById('ratingBars');
-      rb.innerHTML = '';
-      var maxR = Math.max.apply(null, Object.values(ratings));
-      Object.keys(ratings).forEach(function(k) { renderBar(rb, 'Nota ' + k, ratings[k], maxR, k < 8 ? 'orange' : ''); });
+      if (rb) {
+        rb.innerHTML = '';
+        var maxR = Math.max.apply(null, Object.values(ratings));
+        Object.keys(ratings).forEach(function(k) { renderBar(rb, 'Nota ' + k, ratings[k], maxR, k < 8 ? 'orange' : ''); });
+      }
 
       var tb    = document.getElementById('themeBars');
-      tb.innerHTML = '';
-      var maxTh = Math.max.apply(null, themes.map(function(x) { return x[1]; }));
-      themes.forEach(function(t) { renderBar(tb, t[0], t[1], maxTh, t[0].indexOf('Musica') >= 0 ? 'orange' : ''); });
+      if (tb) {
+        tb.innerHTML = '';
+        var maxTh = Math.max.apply(null, themes.map(function(x) { return x[1]; }));
+        themes.forEach(function(t) { renderBar(tb, t[0], t[1], maxTh, t[0].indexOf('Musica') >= 0 ? 'orange' : ''); });
+      }
 
       var top = document.getElementById('topCards');
-      top.innerHTML = '';
-      topItems.forEach(function(i, idx) {
-        top.insertAdjacentHTML('beforeend',
-          '<div class="rank-card"'
-          + ' data-block-id="top-card-' + idx + '"'
-          + ' data-block-type="rank-card"'
-          + ' data-block-visible="true">' +
-            '<span class="score-pill">' + fmt(i.media) + '/5</span>' +
-            '<h4>' + i.item + '</h4>' +
-            '<p>' + i.bloco + ' &middot; ' + fmt(i.pct_positivo * 100, 1) + '% Bom+Excelente</p>' +
-          '</div>'
-        );
-      });
+      if (top) {
+        top.querySelectorAll('[data-generated="chart"]').forEach(function(el) { el.remove(); });
+        topItems.forEach(function(i, idx) {
+          top.insertAdjacentHTML('beforeend',
+            '<div class="rank-card"'
+            + ' data-generated="chart"'
+            + ' data-block-id="top-card-' + idx + '"'
+            + ' data-block-type="rank-card"'
+            + ' data-block-visible="true">' +
+              '<span class="score-pill">' + fmt(i.media) + '/5</span>' +
+              '<h4>' + i.item + '</h4>' +
+              '<p>' + i.bloco + ' &middot; ' + fmt(i.pct_positivo * 100, 1) + '% Bom+Excelente</p>' +
+            '</div>'
+          );
+        });
+      }
 
       var bot = document.getElementById('bottomCards');
-      bot.innerHTML = '';
-      bottomItems.forEach(function(i, idx) {
-        bot.insertAdjacentHTML('beforeend',
-          '<div class="rank-card opp"'
-          + ' data-block-id="bot-card-' + idx + '"'
-          + ' data-block-type="rank-card"'
-          + ' data-block-visible="true">' +
-            '<span class="score-pill">' + fmt(i.media) + '/5</span>' +
-            '<h4>' + i.item + '</h4>' +
-            '<p>' + i.bloco + ' &middot; ' + fmt(i.pct_positivo * 100, 1) + '% Bom+Excelente</p>' +
-          '</div>'
-        );
-      });
+      if (bot) {
+        bot.querySelectorAll('[data-generated="chart"]').forEach(function(el) { el.remove(); });
+        bottomItems.forEach(function(i, idx) {
+          bot.insertAdjacentHTML('beforeend',
+            '<div class="rank-card opp"'
+            + ' data-generated="chart"'
+            + ' data-block-id="bot-card-' + idx + '"'
+            + ' data-block-type="rank-card"'
+            + ' data-block-visible="true">' +
+              '<span class="score-pill">' + fmt(i.media) + '/5</span>' +
+              '<h4>' + i.item + '</h4>' +
+              '<p>' + i.bloco + ' &middot; ' + fmt(i.pct_positivo * 100, 1) + '% Bom+Excelente</p>' +
+            '</div>'
+          );
+        });
+      }
 
       setTimeout(function() {
         document.querySelectorAll('.bar-fill').forEach(function(x) { x.style.width = x.dataset.width; });
       }, 350);
 
       /* Step 10: sincronizar estado após renderizar os gráficos */
-      setTimeout(syncStateFromDOM, 400);
+      setTimeout(function() {
+        initEditorMetadata();
+        syncStateFromDOM();
+      }, 400);
     }
 
     /* ----------------------------------------------------------
@@ -2356,6 +2409,39 @@
       return Date.now().toString(36) + _uidCounter;
     }
 
+    /**
+     * Normaliza um texto para uso em id HTML seguro.
+     * - minúsculas
+     * - sem acentos
+     * - sem espaços/símbolos problemáticos
+     */
+    function _normalizeId(raw) {
+      var txt = String(raw || '')
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9_-]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .replace(/-{2,}/g, '-');
+      return txt || 'item';
+    }
+
+    /**
+     * Gera id único e seguro para CSS/HTML.
+     * Evita colisão com id, data-section-id e data-block-id existentes.
+     */
+    function generateSafeId(prefix) {
+      var base = _normalizeId(prefix || 'item');
+      var used = new Set();
+      document.querySelectorAll('[id]').forEach(function(el) { used.add(el.id); });
+      document.querySelectorAll('[data-section-id]').forEach(function(el) { used.add(el.getAttribute('data-section-id')); });
+      document.querySelectorAll('[data-block-id]').forEach(function(el) { used.add(el.getAttribute('data-block-id')); });
+
+      if (!used.has(base)) return base;
+      var i = 2;
+      while (used.has(base + '-' + i)) i++;
+      return base + '-' + i;
+    }
+
     /* ----------------------------------------------------------
        BIBLIOTECA DE BLOCOS — Step 6
        ---------------------------------------------------------- */
@@ -2656,7 +2742,7 @@
 
       /* Atributos obrigatórios que todos os blocos precisam ter */
       _blockCounter++;
-      newEl.setAttribute('data-block-id',      'blk-' + genUID());
+      newEl.setAttribute('data-block-id',      generateSafeId('blk-' + genUID()));
       newEl.setAttribute('data-block-type',     def.type);
       newEl.setAttribute('data-block-visible',  'true');
 
@@ -2755,7 +2841,7 @@
       if (!selectedSection) return;
 
       var clone    = selectedSection.cloneNode(true);
-      var newId    = selectedSection.getAttribute('data-section-id') + '-cp-' + genUID();
+      var newId    = generateSafeId((selectedSection.getAttribute('data-section-id') || 'secao') + '-cp-' + genUID());
       var oldTitle = selectedSection.getAttribute('data-section-title') || '';
       var newTitle = oldTitle ? oldTitle + ' (cópia)' : 'Seção (cópia)';
 
@@ -2776,7 +2862,7 @@
       /* Atribuir data-block-id a todos os blocos novos da seção clonada */
       clone.querySelectorAll(BLOCK_SELECTOR).forEach(function(el) {
         _blockCounter++;
-        el.setAttribute('data-block-id','blk-' + _blockCounter);
+        el.setAttribute('data-block-id', generateSafeId('blk-' + _blockCounter));
         if (!el.getAttribute('data-block-type')) {
           for (var cls in BLOCK_TYPE_MAP) {
             if (el.classList.contains(cls)) { el.setAttribute('data-block-type', cls); break; }
@@ -2824,7 +2910,7 @@
 
       var clone = selectedBlock.cloneNode(true);
       _blockCounter++;
-      clone.setAttribute('data-block-id','blk-' + _blockCounter);
+      clone.setAttribute('data-block-id', generateSafeId('blk-' + _blockCounter));
 
       cleanClone(clone);
 
@@ -2877,23 +2963,66 @@
     };
 
     var _blockCounter = 0;
+
+    /** Tenta inferir tipo de bloco com base em classes conhecidas */
+    function inferBlockType(el) {
+      if (!el) return '';
+      for (var cls in BLOCK_TYPE_MAP) {
+        if (el.classList.contains(cls)) return cls;
+      }
+      if (el.classList.contains('kpi-grid')) return 'kpi';
+      return 'bloco';
+    }
+
     function initBlockAttributes() {
       document.querySelectorAll(BLOCK_SELECTOR).forEach(function(el) {
         if (!el.getAttribute('data-block-id')) {
           _blockCounter++;
-          el.setAttribute('data-block-id', 'blk-' + _blockCounter);
+          el.setAttribute('data-block-id', generateSafeId('blk-' + _blockCounter));
         }
         if (!el.getAttribute('data-block-type')) {
-          var type = 'bloco';
-          for (var cls in BLOCK_TYPE_MAP) {
-            if (el.classList.contains(cls)) { type = cls; break; }
-          }
-          el.setAttribute('data-block-type', type);
+          el.setAttribute('data-block-type', inferBlockType(el));
         }
-        if (!el.getAttribute('data-block-visible')) {
+        if (el.getAttribute('data-block-visible') !== 'true' && el.getAttribute('data-block-visible') !== 'false') {
           el.setAttribute('data-block-visible', 'true');
         }
       });
+    }
+
+    /**
+     * Garante metadados mínimos de seção/bloco para estabilidade estrutural.
+     * Chamar após import/restore/duplicação e após renderização dinâmica.
+     */
+    function initEditorMetadata() {
+      document.querySelectorAll('section').forEach(function(sec, idx) {
+        if (!sec.id) sec.id = generateSafeId('secao-' + (idx + 1));
+        if (!sec.getAttribute('data-section-id')) sec.setAttribute('data-section-id', sec.id);
+        if (sec.getAttribute('data-visible') !== 'true' && sec.getAttribute('data-visible') !== 'false') {
+          sec.setAttribute('data-visible', 'true');
+        }
+        if (!sec.getAttribute('data-section-title')) {
+          var h2 = sec.querySelector('h2');
+          sec.setAttribute('data-section-title', h2 ? h2.textContent.trim() : ('Seção ' + (idx + 1)));
+        }
+      });
+
+      initBlockAttributes();
+    }
+
+    /** Reaplica seleção atual e estado de toolbars de forma segura */
+    function refreshSelectableBlocks() {
+      if (selectedSection && !document.body.contains(selectedSection)) selectedSection = null;
+      if (selectedBlock && !document.body.contains(selectedBlock)) selectedBlock = null;
+
+      if (selectedBlock) {
+        selectBlock(selectedBlock);
+      } else if (selectedSection) {
+        selectSection(selectedSection);
+      } else {
+        hideToolbar();
+        var btb = document.getElementById('block-toolbar');
+        if (btb) btb.classList.remove('visible');
+      }
     }
 
     /* Detecta suporte a plaintext-only */
@@ -3204,6 +3333,7 @@
           _autoVersionDone = true;
           createVersion('Versão automática (entrada no editor)', true);
         }
+        initEditorMetadata();
         initBlockAttributes();
         document.querySelectorAll('[data-editable]').forEach(function(el) {
           setEditable(el, true);
@@ -3211,9 +3341,11 @@
         document.querySelectorAll('section[data-section-id]').forEach(function(sec) {
           sec.addEventListener('click', onSectionClick);
         });
+        startEditMutationObserver();
       } else {
         btnEdit.textContent = 'Editar apresentação';
         btnEdit.classList.remove('active');
+        stopEditMutationObserver();
         if (selectedBlock) {
           selectedBlock.classList.remove('selected-block');
           selectedBlock = null;
@@ -3229,6 +3361,9 @@
         clearPropsPanel();
         document.getElementById('props-block-content').style.display = 'none';
       }
+
+      syncStateFromDOM();
+      _renderValidationResult(validatePresentationStructure());
     }
 
     function onSectionClick(e) {
@@ -3575,6 +3710,8 @@
        AUTOSAVE — debounce de 800ms
        ---------------------------------------------------------- */
     var _autosaveTimer = null;
+    var _editMutationObserver = null;
+    var _editMutationDebounce = null;
 
     /** Agenda um autosave: reinicia o timer sempre que chamado */
     function _scheduleAutosave() {
@@ -3583,6 +3720,38 @@
         _autosaveTimer = null;
         _doAutosave();
       }, 800);
+    }
+
+    /**
+     * Observer leve para detectar mudanças estruturais apenas em modo edição.
+     * Mantém autosave/dirty atualizados sem lógica pesada.
+     */
+    function startEditMutationObserver() {
+      stopEditMutationObserver();
+      if (!editMode) return;
+
+      _editMutationObserver = new MutationObserver(function() {
+        if (_editMutationDebounce) clearTimeout(_editMutationDebounce);
+        _editMutationDebounce = setTimeout(function() {
+          _editMutationDebounce = null;
+          updateStateAndSave('Mudança estrutural observada');
+        }, 450);
+      });
+
+      _editMutationObserver.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['data-visible','data-block-visible','data-section-id','data-block-id','data-block-type','style','class']
+      });
+    }
+
+    function stopEditMutationObserver() {
+      if (_editMutationDebounce) { clearTimeout(_editMutationDebounce); _editMutationDebounce = null; }
+      if (_editMutationObserver) {
+        _editMutationObserver.disconnect();
+        _editMutationObserver = null;
+      }
     }
 
     /** Salva o HTML serializado no localStorage como rascunho */
@@ -3597,7 +3766,7 @@
         var el  = document.getElementById('arq-draft-status');
         if (el) el.textContent = msg;
       } catch(e) {
-        console.warn('Autosave falhou:', e);
+        console.warn('[PresentationEditor] Autosave falhou:', e);
       }
     }
 
@@ -3652,7 +3821,7 @@
     function _saveVersions(versions) {
       try {
         localStorage.setItem(LS_VERSIONS, JSON.stringify(versions));
-      } catch(e) { console.warn('Não foi possível salvar versões:', e); }
+      } catch(e) { console.warn('[PresentationEditor] Não foi possível salvar versões:', e); }
     }
 
     /**
@@ -3715,6 +3884,7 @@
 
     /** Exporta o projeto como arquivo .json via Blob */
     function exportProjetoJSON() {
+      if (!_confirmarSalvarComErros('Exportar projeto .json')) return;
       var titleEl = document.querySelector('h1[data-editable]');
       var payload = {
         appVersion:    '1.0',
@@ -3762,7 +3932,8 @@
           showToast('Projeto importado');
           if (activePropsTab === 'arquivo') buildArquivoPanel();
         } catch(err) {
-          alert('Não foi possível ler o arquivo:\n' + err.message);
+          console.error('[PresentationEditor] Falha ao importar JSON:', err);
+          alert('Não foi possível ler o arquivo de projeto.\nDetalhes: ' + err.message);
         }
         inputEl.value = '';  /* permite reimportar o mesmo arquivo */
       };
@@ -3782,92 +3953,83 @@
      * página, preservando o file handle e o estado do editor.
      */
     function reinitAfterRestore(html) {
-      /* 1. Parse do snapshot */
-      var parser = new DOMParser();
-      var parsed = parser.parseFromString(html, 'text/html');
+      try {
+        /* 1. Parse do snapshot */
+        var parser = new DOMParser();
+        var parsed = parser.parseFromString(html, 'text/html');
 
-      /* 2. Aplica overrides de tema vindos do snapshot */
-      var themeStyle = parsed.querySelector('#theme-overrides');
-      var oldTheme   = document.querySelector('#theme-overrides');
-      if (oldTheme) oldTheme.parentNode.removeChild(oldTheme);
-      if (themeStyle) {
-        var copy = document.createElement('style');
-        copy.id = 'theme-overrides';
-        copy.textContent = themeStyle.textContent;
-        document.head.appendChild(copy);
-        /* Copia também o style inline de :root (CSS vars inline) */
-        var srcHtml = parsed.querySelector('html');
-        if (srcHtml && srcHtml.getAttribute('style')) {
-          document.documentElement.setAttribute('style', srcHtml.getAttribute('style'));
-        }
-      } else {
-        /* Sem tema personalizado: remove overrides existentes */
-        document.documentElement.removeAttribute('style');
-        document.body.style.removeProperty('font-family');
-      }
-
-      /* 3. Substituir conteúdo do <header> */
-      var newHeader = parsed.querySelector('header');
-      var curHeader = document.querySelector('header');
-      if (newHeader && curHeader) curHeader.innerHTML = newHeader.innerHTML;
-
-      /* 4. Substituir conteúdo do <nav> */
-      var newNav = parsed.querySelector('nav');
-      var curNav = document.querySelector('nav');
-      if (newNav && curNav) curNav.innerHTML = newNav.innerHTML;
-
-      /* 5. Remover todas as seções do documento vivo */
-      document.querySelectorAll('section[data-section-id]').forEach(function(s) {
-        s.parentNode.removeChild(s);
-      });
-
-      /* 6. Inserir novas seções antes do <script> final */
-      var scriptTag = document.querySelector('body > script');
-      Array.from(parsed.querySelectorAll('section[data-section-id]')).forEach(function(sec) {
-        var imported = document.adoptNode(sec);
-        if (scriptTag) {
-          document.body.insertBefore(imported, scriptTag);
+        /* 2. Aplica overrides de tema vindos do snapshot */
+        var themeStyle = parsed.querySelector('#theme-overrides');
+        var oldTheme   = document.querySelector('#theme-overrides');
+        if (oldTheme) oldTheme.parentNode.removeChild(oldTheme);
+        if (themeStyle) {
+          var copy = document.createElement('style');
+          copy.id = 'theme-overrides';
+          copy.textContent = themeStyle.textContent;
+          document.head.appendChild(copy);
+          var srcHtml = parsed.querySelector('html');
+          if (srcHtml && srcHtml.getAttribute('style')) {
+            document.documentElement.setAttribute('style', srcHtml.getAttribute('style'));
+          }
         } else {
-          document.body.appendChild(imported);
+          document.documentElement.removeAttribute('style');
+          document.body.style.removeProperty('font-family');
         }
-      });
 
-      /* 7. Resetar estado de seleção do editor */
-      selectSection(null);
-      selectedBlock = null;
-      var btb = document.getElementById('block-toolbar');
-      if (btb) btb.classList.remove('visible');
-      clearPropsPanel();
-      document.getElementById('props-block-content').style.display = 'none';
+        /* 3. Substituir conteúdo do <header> */
+        var newHeader = parsed.querySelector('header');
+        var curHeader = document.querySelector('header');
+        if (newHeader && curHeader) curHeader.innerHTML = newHeader.innerHTML;
 
-      /* 8. Reinicializar atributos de blocos nas novas seções */
-      initBlockAttributes();
+        /* 4. Substituir conteúdo do <nav> */
+        var newNav = parsed.querySelector('nav');
+        var curNav = document.querySelector('nav');
+        if (newNav && curNav) curNav.innerHTML = newNav.innerHTML;
 
-      /* 9. Reativar campos editáveis se em modo de edição */
-      if (editMode) {
-        document.querySelectorAll('[data-editable]').forEach(function(el) {
-          setEditable(el, true);
+        /* 5. Remover todas as seções do documento vivo */
+        document.querySelectorAll('section').forEach(function(s) {
+          s.parentNode.removeChild(s);
         });
-        document.querySelectorAll('section[data-section-id]').forEach(function(sec) {
-          sec.addEventListener('click', onSectionClick);
+
+        /* 6. Inserir novas seções antes do <script> final */
+        var scriptTag = document.querySelector('body > script');
+        Array.from(parsed.querySelectorAll('section')).forEach(function(sec) {
+          var imported = document.adoptNode(sec);
+          if (scriptTag) {
+            document.body.insertBefore(imported, scriptTag);
+          } else {
+            document.body.appendChild(imported);
+          }
         });
+
+        /* 7. Reinicialização completa de estabilidade */
+        initEditorMetadata();
+        if (editMode) {
+          document.querySelectorAll('[data-editable]').forEach(function(el) { setEditable(el, true); });
+          document.querySelectorAll('section[data-section-id]').forEach(function(sec) {
+            sec.removeEventListener('click', onSectionClick);
+            sec.addEventListener('click', onSectionClick);
+          });
+        }
+
+        rebuildNav();
+        initCharts();
+        document.querySelectorAll('.num').forEach(countup);
+        document.querySelectorAll('.fade').forEach(function(el) {
+          el.classList.remove('visible');
+          observer.observe(el);
+        });
+
+        selectSection(null);
+        selectedBlock = null;
+        refreshSelectableBlocks();
+        syncStateFromDOM();
+        validarEstrutura();
+        markDirty();
+      } catch (e) {
+        console.error('[PresentationEditor] Falha ao restaurar snapshot:', e);
+        alert('Não foi possível restaurar o conteúdo com segurança.\nO documento atual foi mantido.');
       }
-
-      /* 10. Reinicializar gráficos e contadores animados */
-      initCharts();
-      document.querySelectorAll('.num').forEach(countup);
-
-      /* 11. Reinicializar IntersectionObserver nas novas seções */
-      document.querySelectorAll('.fade').forEach(function(el) {
-        el.classList.remove('visible');
-        observer.observe(el);
-      });
-
-      /* 12. Reconstruir navegação lateral */
-      rebuildNav();
-
-      /* 13. Marcar como dirty (conteúdo mudou, ainda não salvo) */
-      markDirty();
     }
 
     /* ----------------------------------------------------------
@@ -3882,6 +4044,9 @@
       /* Status do rascunho */
       var draftEl = document.getElementById('arq-draft-status');
       if (draftEl) draftEl.textContent = _draftStatusText();
+
+      /* Saúde estrutural do arquivo */
+      _renderValidationResult(validatePresentationStructure());
 
       /* Status dirty */
       updateDirtyUI();
@@ -4637,14 +4802,14 @@
      * Contém versão do app, timestamp, tema, configurações,
      * datasets e resumo das seções/blocos.
      */
-    var presentationState = {
+    var presentationState = Object.assign({
       appVersion:      '1.0',
       updatedAt:       '',
       theme:           {},   /* CSS vars sobrescritas pelo editor de tema */
       settings:        {},   /* configurações gerais (modo de edição etc.) */
       datasets:        {},   /* cópia dos dados: blocks, topItems, bottomItems, themes, ratings */
       sectionsSummary: []    /* resumo de cada seção: id, ordem, título, visibilidade, blocos */
-    };
+    }, _PRESENTATION_STATE_BOOT || {});
 
     /**
      * syncStateFromDOM()
@@ -4738,128 +4903,368 @@
       syncStateFromDOM();     /* atualiza presentationState com DOM atual */
       markDirty();            /* marca projeto como não salvo */
       _scheduleAutosave();    /* agenda autosave no localStorage */
-      if (reason) console.log('[PresentationState] Atualizado:', reason);
+      if (reason && window.__PE_DEBUG) console.log('[PresentationEditor] Estado atualizado:', reason);
     }
 
     /**
-     * validarEstrutura()
-     * Verifica problemas comuns na estrutura do documento:
-     * IDs duplicados, atributos ausentes, containers de gráfico,
-     * e JSON scripts inválidos.
-     * Exibe resultado em PT-BR dentro do painel Arquivo.
+     * Limpa estados temporários da UI para export/salvamento.
+     * Retorna um clone pronto para serialização, preservando conteúdo.
      */
-    function validarEstrutura() {
-      var erros  = [];
-      var avisos = [];
+    function sanitizeEditorStateForExport(targetRoot) {
+      var source = targetRoot || document.documentElement;
+      var clone = source.cloneNode(true);
+      var body = clone.querySelector('body');
 
-      /* 1. Seções sem data-section-id */
-      var todasSecs = Array.from(document.querySelectorAll('section'));
-      todasSecs.forEach(function(s) {
-        if (!s.getAttribute('data-section-id')) {
-          erros.push('Seção sem atributo data-section-id encontrada');
-        }
+      /* 1) Atributos de edição temporários */
+      clone.querySelectorAll('[contenteditable]').forEach(function(el) {
+        el.removeAttribute('contenteditable');
+        el.removeAttribute('spellcheck');
       });
 
-      /* 2. IDs de seção duplicados */
-      var sections  = Array.from(document.querySelectorAll('section[data-section-id]'));
-      var secIdCnt  = {};
-      sections.forEach(function(s) {
-        var id = s.getAttribute('data-section-id');
-        secIdCnt[id] = (secIdCnt[id] || 0) + 1;
-      });
-      Object.keys(secIdCnt).forEach(function(id) {
-        if (secIdCnt[id] > 1)
-          erros.push('ID de seção duplicado: "' + id + '" (' + secIdCnt[id] + 'x)');
-      });
-
-      /* 3. Blocos seleccionáveis sem data-block-id */
-      var BLOCK_SEL = '.kpi, .panel, .insight, .rank-card, .quote, .rec-card';
-      var blocos = Array.from(document.querySelectorAll(BLOCK_SEL));
-      blocos.forEach(function(bl) {
-        if (!bl.getAttribute('data-block-id')) {
-          var cls = (bl.className || '').split(' ')[0];
-          avisos.push('Bloco "' + cls + '" sem atributo data-block-id');
-        }
+      /* 2) Classes temporárias de seleção/preview/auxílio */
+      var tempClasses = [
+        'selected-section','selected-block','pres-active','printing',
+        'edit-mode','pres-mode','show','visible'
+      ];
+      tempClasses.forEach(function(cls) {
+        clone.querySelectorAll('.' + cls).forEach(function(el) {
+          if (cls === 'visible' && !el.classList.contains('fade')) return;
+          el.classList.remove(cls);
+        });
       });
 
-      /* 4. IDs de bloco duplicados */
-      var blockIds = blocos
-        .map(function(b) { return b.getAttribute('data-block-id'); })
-        .filter(Boolean);
-      var blIdCnt = {};
-      blockIds.forEach(function(id) { blIdCnt[id] = (blIdCnt[id] || 0) + 1; });
-      Object.keys(blIdCnt).forEach(function(id) {
-        if (blIdCnt[id] > 1)
-          erros.push('ID de bloco duplicado: "' + id + '" (' + blIdCnt[id] + 'x)');
+      /* 3) Body limpo para modo visualização */
+      if (body) {
+        body.classList.remove('edit-mode', 'pres-mode', 'printing', 'fullscreen-active', 'is-fullscreen');
+      }
+
+      /* 4) Mensagens e feedback transitório */
+      var toast = clone.querySelector('#editor-toast');
+      if (toast) { toast.classList.remove('show'); toast.textContent = ''; }
+      var addFb = clone.querySelector('#add-feedback');
+      if (addFb) { addFb.classList.remove('visible'); addFb.style.display = ''; }
+
+      /* 5) Toolbars e estados temporários de posicionamento */
+      var sectionTb = clone.querySelector('#section-toolbar');
+      if (sectionTb) {
+        sectionTb.classList.remove('visible');
+        sectionTb.querySelectorAll('.tb-disabled').forEach(function(btn) { btn.classList.remove('tb-disabled'); });
+        sectionTb.style.top = ''; sectionTb.style.left = ''; sectionTb.style.right = '';
+      }
+      var blockTb = clone.querySelector('#block-toolbar');
+      if (blockTb) {
+        blockTb.classList.remove('visible');
+        blockTb.querySelectorAll('.tb-disabled').forEach(function(btn) { btn.classList.remove('tb-disabled'); });
+        blockTb.style.top = ''; blockTb.style.left = ''; blockTb.style.right = '';
+      }
+
+      /* 6) Painéis abertos do editor não devem ir abertos no export */
+      var propsPanel = clone.querySelector('#props-panel');
+      if (propsPanel) propsPanel.style.display = 'none';
+      var propsEmpty = clone.querySelector('#props-empty');
+      if (propsEmpty) propsEmpty.style.display = 'block';
+      var propsContent = clone.querySelector('#props-content');
+      if (propsContent) propsContent.style.display = 'none';
+      var propsBlock = clone.querySelector('#props-block-content');
+      if (propsBlock) propsBlock.style.display = 'none';
+      var propsTheme = clone.querySelector('#props-theme');
+      if (propsTheme) propsTheme.style.display = 'none';
+      var propsAdd = clone.querySelector('#props-add');
+      if (propsAdd) propsAdd.style.display = 'none';
+      var propsArquivo = clone.querySelector('#props-arquivo');
+      if (propsArquivo) propsArquivo.style.display = 'none';
+      var propsDados = clone.querySelector('#props-dados');
+      if (propsDados) propsDados.style.display = 'none';
+      clone.querySelectorAll('.props-tab.active').forEach(function(tab) { tab.classList.remove('active'); });
+      var tabSecao = clone.querySelector('#tab-secao');
+      if (tabSecao) tabSecao.classList.add('active');
+      var validationBox = clone.querySelector('#arq-validation-result');
+      if (validationBox) { validationBox.style.display = 'none'; validationBox.innerHTML = ''; }
+      var health = clone.querySelector('#file-health-indicator');
+      if (health) health.style.display = 'none';
+
+      /* 7) Barra de apresentação e status temporários */
+      var presBar = clone.querySelector('#pres-bar');
+      if (presBar) presBar.style.display = 'none';
+      var presProgress = clone.querySelector('#pres-progress');
+      if (presProgress) presProgress.textContent = '1 / 1';
+
+      /* 8) Limpar campos dinâmicos temporários do painel */
+      var textList = clone.querySelector('#props-text-list');
+      if (textList) textList.innerHTML = '';
+      var blockTextList = clone.querySelector('#block-text-list');
+      if (blockTextList) blockTextList.innerHTML = '';
+      var textWrap = clone.querySelector('#props-text-fields');
+      if (textWrap) textWrap.style.display = 'none';
+      var blockTextWrap = clone.querySelector('#block-text-fields');
+      if (blockTextWrap) blockTextWrap.style.display = 'none';
+
+      return clone;
+    }
+
+    /**
+     * Validação estrutural central da apresentação.
+     * Retorna objeto com status, erros, avisos e resumo.
+     */
+    function validatePresentationStructure() {
+      var errors = [];
+      var warnings = [];
+      var sections = Array.from(document.querySelectorAll('section'));
+      var secWithData = Array.from(document.querySelectorAll('section[data-section-id]'));
+      var blocks = Array.from(document.querySelectorAll(BLOCK_SELECTOR));
+      var requiredContainers = ['blockBars','ratingBars','themeBars','topCards','bottomCards'];
+
+      var secIdMap = {};
+      var dataSecMap = {};
+      var blockMap = {};
+
+      sections.forEach(function(sec, idx) {
+        var id = sec.id || '';
+        var ds = sec.getAttribute('data-section-id') || '';
+        var vis = sec.getAttribute('data-visible');
+        if (!id) errors.push('Seção #' + (idx + 1) + ' sem atributo id.');
+        if (!ds) errors.push('Seção #' + (idx + 1) + ' sem data-section-id.');
+        if (vis !== 'true' && vis !== 'false') errors.push('Seção "' + (ds || id || ('#'+(idx+1))) + '" com data-visible inválido: "' + String(vis) + '".');
+        if (id) secIdMap[id] = (secIdMap[id] || 0) + 1;
+        if (ds) dataSecMap[ds] = (dataSecMap[ds] || 0) + 1;
       });
 
-      /* 5. Containers de gráfico ausentes */
-      ['blockBars', 'ratingBars', 'themeBars', 'topCards', 'bottomCards'].forEach(function(id) {
-        if (!document.getElementById(id))
-          erros.push('Container de gráfico ausente: #' + id);
+      Object.keys(secIdMap).forEach(function(id) {
+        if (secIdMap[id] > 1) errors.push('Atributo id duplicado em seção: "' + id + '" (' + secIdMap[id] + 'x).');
+      });
+      Object.keys(dataSecMap).forEach(function(id) {
+        if (dataSecMap[id] > 1) errors.push('data-section-id duplicado: "' + id + '" (' + dataSecMap[id] + 'x).');
       });
 
-      /* 6. JSON scripts inválidos */
-      ['presentationDataOverrides', 'presentationStateData'].forEach(function(id) {
+      blocks.forEach(function(bl, idx) {
+        var bid = bl.getAttribute('data-block-id');
+        var btype = bl.getAttribute('data-block-type');
+        var bvis = bl.getAttribute('data-block-visible');
+        if (!bid) errors.push('Bloco selecionável #' + (idx + 1) + ' sem data-block-id.');
+        if (!btype) errors.push('Bloco "' + (bid || ('#'+(idx+1))) + '" sem data-block-type.');
+        if (bvis !== 'true' && bvis !== 'false') errors.push('Bloco "' + (bid || ('#'+(idx+1))) + '" com data-block-visible inválido: "' + String(bvis) + '".');
+        if (bid) blockMap[bid] = (blockMap[bid] || 0) + 1;
+      });
+
+      Object.keys(blockMap).forEach(function(id) {
+        if (blockMap[id] > 1) errors.push('data-block-id duplicado: "' + id + '" (' + blockMap[id] + 'x).');
+      });
+
+      requiredContainers.forEach(function(id) {
+        var all = document.querySelectorAll('#' + id);
+        if (all.length === 0) errors.push('Container crítico ausente: #' + id + '.');
+        if (all.length > 1) errors.push('Container crítico duplicado: #' + id + ' (' + all.length + 'x).');
+      });
+
+      ['presentationStateData', 'presentationDataOverrides'].forEach(function(id) {
         var el = document.getElementById(id);
         if (!el) {
-          avisos.push('Script JSON ausente no documento: #' + id);
+          errors.push('Script JSON obrigatório ausente: #' + id + '.');
           return;
         }
         try {
           JSON.parse(el.textContent || '{}');
         } catch (e) {
-          erros.push('JSON inválido em #' + id + ': ' + e.message);
+          errors.push('JSON inválido em #' + id + ': ' + e.message);
         }
       });
 
-      /* --- Montar HTML do resultado --- */
-      var out = '';
-      if (erros.length === 0 && avisos.length === 0) {
-        out = '<div style="color:#2a7a2a;font-weight:600;padding:8px 0">'
-            + '&#9989; Estrutura válida — nenhum problema encontrado.</div>';
-      } else {
-        if (erros.length) {
-          out += '<div style="font-weight:600;color:#c0392b;margin-bottom:4px">'
-               + 'Erros (' + erros.length + '):</div>';
-          erros.forEach(function(e) {
-            out += '<div style="color:#c0392b;margin:2px 0">&#10007; ' + e + '</div>';
-          });
-        }
-        if (avisos.length) {
-          out += '<div style="font-weight:600;color:#a06000;margin:8px 0 4px">'
-               + 'Avisos (' + avisos.length + '):</div>';
-          avisos.forEach(function(a) {
-            out += '<div style="color:#a06000;margin:2px 0">&#9888; ' + a + '</div>';
-          });
-        }
-      }
+      var visibleSections = secWithData.filter(function(s) { return s.getAttribute('data-visible') !== 'false'; });
+      if (visibleSections.length === 0) errors.push('A apresentação não possui seções visíveis.');
 
-      /* Exibir resultado no painel Arquivo */
-      var resultEl = document.getElementById('arq-validation-result');
-      if (resultEl) {
-        resultEl.innerHTML = out;
-        resultEl.style.display = 'block';
-      }
+      document.querySelectorAll('nav a[href^="#"]').forEach(function(a) {
+        var targetId = a.getAttribute('href').slice(1);
+        var sec = Array.from(document.querySelectorAll('section[data-section-id]')).find(function(s) {
+          return s.getAttribute('data-section-id') === targetId;
+        });
+        if (!sec) {
+          warnings.push('Link da navegação aponta para seção inexistente: #' + targetId + '.');
+        } else if (sec.getAttribute('data-visible') === 'false') {
+          warnings.push('Link da navegação aponta para seção oculta: #' + targetId + '.');
+        }
+      });
+
+      var summary = {
+        sections: sections.length,
+        visibleSections: visibleSections.length,
+        blocks: blocks.length,
+        errors: errors.length,
+        warnings: warnings.length
+      };
+
+      return { valid: errors.length === 0, errors: errors, warnings: warnings, summary: summary };
     }
 
-    /* Inicializar presentationState logo após carregamento dos dados */
-    (function() {
-      /* Aguarda o DOM estar pronto antes de sincronizar */
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() { syncStateFromDOM(); });
+    function _setFileHealthIndicator(level, text) {
+      var el = document.getElementById('file-health-indicator');
+      if (!el) return;
+      el.classList.remove('ok','warn','error');
+      el.classList.add(level);
+      el.textContent = text;
+    }
+
+    function _renderValidationResult(result) {
+      var box = document.getElementById('arq-validation-result');
+      if (!box) return;
+
+      var html = '';
+      if (result.errors.length === 0 && result.warnings.length === 0) {
+        html += '<div style="font-weight:700;color:#1b7a33">✅ Estrutura OK</div>';
+        html += '<div>Seções: ' + result.summary.sections + ' | Blocos: ' + result.summary.blocks + '</div>';
+        _setFileHealthIndicator('ok', 'Estrutura OK');
+      } else if (result.errors.length === 0) {
+        html += '<div style="font-weight:700;color:#8a5a00">⚠ Avisos encontrados</div>';
+        result.warnings.forEach(function(w) { html += '<div style="color:#8a5a00">• ' + w + '</div>'; });
+        _setFileHealthIndicator('warn', 'Avisos encontrados');
       } else {
-        /* DOM já disponível (script no final do body) */
-        setTimeout(syncStateFromDOM, 50);
+        html += '<div style="font-weight:700;color:#a42828">⛔ Erros encontrados</div>';
+        result.errors.forEach(function(e) { html += '<div style="color:#a42828">• ' + e + '</div>'; });
+        if (result.warnings.length) {
+          html += '<div style="margin-top:6px;font-weight:700;color:#8a5a00">Avisos</div>';
+          result.warnings.forEach(function(w) { html += '<div style="color:#8a5a00">• ' + w + '</div>'; });
+        }
+        _setFileHealthIndicator('error', 'Erros encontrados');
       }
-    })();
+
+      box.innerHTML = html;
+      box.style.display = 'block';
+    }
+
+    function abrirSaudeArquivo() {
+      switchPropsTab('arquivo');
+      validarEstrutura();
+    }
+
+    /** Compatibilidade com botão já existente no HTML */
+    function validarEstrutura() {
+      var result = validatePresentationStructure();
+      _renderValidationResult(result);
+      return result;
+    }
+
+    function _confirmarCorrecaoIdsSecaoDuplicados() {
+      var secIdMap = {};
+      var duplicates = [];
+      document.querySelectorAll('section[id]').forEach(function(sec) {
+        var id = sec.id;
+        secIdMap[id] = (secIdMap[id] || 0) + 1;
+      });
+      Object.keys(secIdMap).forEach(function(id) {
+        if (secIdMap[id] > 1) duplicates.push(id);
+      });
+      if (!duplicates.length) return false;
+
+      var msg = 'Foram encontrados ids duplicados em seções:\n- ' + duplicates.join('\n- ') +
+                '\n\nDeseja corrigir agora gerando ids únicos?';
+      if (!confirm(msg)) return false;
+
+      duplicates.forEach(function(dupId) {
+        var matched = Array.from(document.querySelectorAll('section[id="' + dupId + '"]'));
+        matched.forEach(function(sec, idx) {
+          if (idx === 0) return;
+          var newId = generateSafeId(dupId + '-fix');
+          var oldDataId = sec.getAttribute('data-section-id');
+          sec.id = newId;
+          if (!oldDataId || oldDataId === dupId) sec.setAttribute('data-section-id', newId);
+          document.querySelectorAll('a[href="#' + dupId + '"]').forEach(function(a) {
+            a.setAttribute('href', '#' + newId);
+          });
+        });
+      });
+
+      return true;
+    }
+
+    function corrigirEstruturaAutomaticamente() {
+      var changed = false;
+
+      /* Alto risco: só corrige com confirmação */
+      if (_confirmarCorrecaoIdsSecaoDuplicados()) changed = true;
+
+      /* Seções com metadata ausente */
+      document.querySelectorAll('section').forEach(function(sec, idx) {
+        if (!sec.id) { sec.id = generateSafeId('secao-' + (idx + 1)); changed = true; }
+        if (!sec.getAttribute('data-section-id')) { sec.setAttribute('data-section-id', generateSafeId(sec.id)); changed = true; }
+        var vis = sec.getAttribute('data-visible');
+        if (vis !== 'true' && vis !== 'false') { sec.setAttribute('data-visible', 'true'); changed = true; }
+      });
+
+      /* Blocos com metadata ausente + visibilidade inválida */
+      document.querySelectorAll(BLOCK_SELECTOR).forEach(function(bl, idx) {
+        if (!bl.getAttribute('data-block-id')) { bl.setAttribute('data-block-id', generateSafeId('blk-' + (idx + 1))); changed = true; }
+        if (!bl.getAttribute('data-block-type')) { bl.setAttribute('data-block-type', inferBlockType(bl)); changed = true; }
+        var bvis = bl.getAttribute('data-block-visible');
+        if (bvis !== 'true' && bvis !== 'false') { bl.setAttribute('data-block-visible', 'true'); changed = true; }
+      });
+
+      /* Corrigir data-block-id duplicado (baixo risco) */
+      var seenBlockIds = {};
+      document.querySelectorAll(BLOCK_SELECTOR).forEach(function(bl) {
+        var id = bl.getAttribute('data-block-id');
+        if (!id) return;
+        if (!seenBlockIds[id]) {
+          seenBlockIds[id] = true;
+          return;
+        }
+        bl.setAttribute('data-block-id', generateSafeId(id + '-fix'));
+        changed = true;
+      });
+
+      /* Limpeza de classes temporárias duplicadas */
+      document.querySelectorAll('.selected-section,.selected-block,.pres-active').forEach(function(el) {
+        if (!document.body.classList.contains('edit-mode')) el.classList.remove('selected-section','selected-block');
+        if (!document.body.classList.contains('pres-mode')) el.classList.remove('pres-active');
+        changed = true;
+      });
+
+      rebuildNav();
+      refreshSelectableBlocks();
+      initEditorMetadata();
+      syncStateFromDOM();
+      if (changed) updateStateAndSave('Correção automática de estrutura');
+
+      var result = validarEstrutura();
+      if (changed) showToast('Correções automáticas aplicadas');
+      if (!changed) showToast('Nenhuma correção automática necessária');
+      return result;
+    }
+
+    function _confirmarSalvarComErros(flowLabel) {
+      var result = validatePresentationStructure();
+      _renderValidationResult(result);
+      if (result.errors.length === 0) return true;
+      return confirm('Foram encontrados ' + result.errors.length + ' erro(s) estruturais.\nDeseja continuar com "' + flowLabel + '" mesmo assim?');
+    }
+
+    /* Inicializar presentationState e metadados logo no carregamento */
+    (function() {
+      function boot() {
+        try {
+          if (_PRESENTATION_STATE_BOOT && _PRESENTATION_STATE_BOOT.theme) {
+            applyStateToDOM();
+          }
+          initEditorMetadata();
+          syncStateFromDOM();
+          _renderValidationResult(validatePresentationStructure());
+        } catch (e) {
+          console.error('[PresentationEditor] Falha na inicialização de metadados:', e);
+        }
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
+      } else {
+        setTimeout(boot, 50);
+      }
+    }
+    )();
 
     /* ----------------------------------------------------------
        FIM STEP 9
        ---------------------------------------------------------- */
 
     function serializeHTML() {
-      var clone = document.documentElement.cloneNode(true);
+      syncStateFromDOM();
+      var clone = sanitizeEditorStateForExport(document.documentElement);
 
       /* --- Persistir overrides de tema como <style id="theme-overrides"> --- */
       /* Lê quaisquer CSS vars que tenham sido sobrescritas inline em :root */
@@ -4887,25 +5292,7 @@
         if (head) head.appendChild(styleEl);
       }
 
-      /* Remover estado temporario de edicao */
-      clone.querySelectorAll('[contenteditable]').forEach(function(el) {
-        el.removeAttribute('contenteditable');
-        el.removeAttribute('spellcheck');
-      });
-      clone.querySelectorAll('.selected-section').forEach(function(el) {
-        el.classList.remove('selected-section');
-      });
-      var toolbar = clone.querySelector('#section-toolbar');
-      if (toolbar) toolbar.classList.remove('visible');
-
-      /* Garantir modo de visualizacao no arquivo salvo */
-      clone.querySelector('body').classList.remove('edit-mode');
-      clone.querySelector('body').classList.remove('pres-mode');   /* Step 9 */
-      clone.querySelector('body').classList.remove('printing');     /* Step 9 */
-      /* Remover classe de seção ativa da apresentação */
-      clone.querySelectorAll('.pres-active').forEach(function(el) {
-        el.classList.remove('pres-active');
-      });
+      /* Garantir modo de visualização no arquivo salvo */
       var cloneEdit = clone.querySelector('#btnEdit');
       if (cloneEdit) {
         cloneEdit.textContent = 'Editar apresentação';
@@ -4914,53 +5301,6 @@
       /* Resetar status de arquivo no clone */
       var cloneStatus = clone.querySelector('#saveStatus');
       if (cloneStatus) cloneStatus.textContent = 'Nenhum arquivo vinculado';
-      /* Limpar estado de selecao de bloco */
-      clone.querySelectorAll('.selected-block').forEach(function(el) {
-        el.classList.remove('selected-block');
-      });
-      var btb = clone.querySelector('#block-toolbar');
-      if (btb) btb.classList.remove('visible');
-      var pbk = clone.querySelector('#props-block-content');
-      if (pbk) pbk.style.display = 'none';
-      /* Ocultar toast */
-      var toast = clone.querySelector('#editor-toast');
-      if (toast) { toast.classList.remove('show'); toast.textContent = ''; }
-      /* Limpar campos de texto dinâmicos (gerados por sessão de edição) */
-      var cloneTextList = clone.querySelector('#props-text-list');
-      if (cloneTextList) cloneTextList.innerHTML = '';
-      var cloneBlockTextList = clone.querySelector('#block-text-list');
-      if (cloneBlockTextList) cloneBlockTextList.innerHTML = '';
-      var cloneTextWrap = clone.querySelector('#props-text-fields');
-      if (cloneTextWrap) cloneTextWrap.style.display = 'none';
-      var cloneBlockTextWrap = clone.querySelector('#block-text-fields');
-      if (cloneBlockTextWrap) cloneBlockTextWrap.style.display = 'none';
-
-      /* Limpar painel de props no clone */
-      var cloneProps = clone.querySelector('#props-panel');
-      if (cloneProps) { cloneProps.style.display = 'none'; }
-      var clonePropsEmpty = clone.querySelector('#props-empty');
-      if (clonePropsEmpty) { clonePropsEmpty.style.display = 'block'; }
-      var clonePropsContent = clone.querySelector('#props-content');
-      if (clonePropsContent) { clonePropsContent.style.display = 'none'; }
-      /* Esconder painel de tema no arquivo salvo */
-      var cloneThemePanel = clone.querySelector('#props-theme');
-      if (cloneThemePanel) { cloneThemePanel.style.display = 'none'; }
-      /* Esconder e limpar painel "Adicionar" no arquivo salvo */
-      var cloneAddPanel = clone.querySelector('#props-add');
-      if (cloneAddPanel) { cloneAddPanel.style.display = 'none'; }
-      var cloneAddList = clone.querySelector('#add-block-list');
-      if (cloneAddList) { cloneAddList.innerHTML = ''; }
-      var cloneAddFb = clone.querySelector('#add-feedback');
-      if (cloneAddFb) { cloneAddFb.classList.remove('visible'); cloneAddFb.style.display = ''; }
-      /* Ocultar painel Arquivo no arquivo salvo */
-      var cloneArquivo = clone.querySelector('#props-arquivo');
-      if (cloneArquivo) { cloneArquivo.style.display = 'none'; }
-      /* Ocultar painel Dados no arquivo salvo */
-      var cloneDados = clone.querySelector('#props-dados');
-      if (cloneDados) { cloneDados.style.display = 'none'; }
-      /* Ocultar barra de apresentação no arquivo salvo */
-      var clonePresBar = clone.querySelector('#pres-bar');
-      if (clonePresBar) { clonePresBar.style.display = 'none'; }
 
       /* Persistir dados editados no JSON script tag */
       var ovrEl = clone.querySelector('#presentationDataOverrides');
@@ -5061,13 +5401,14 @@
 
     /* Marca dirty ao editar qualquer texto data-editable diretamente */
     document.addEventListener('input', function(e) {
-      if (e.target && e.target.hasAttribute('data-editable')) markDirty();
+      if (e.target && e.target.hasAttribute('data-editable')) updateStateAndSave('Edição de texto');
     });
 
     /* ----------------------------------------------------------
        ACOES DE GRAVACAO
        ---------------------------------------------------------- */
     function makeBlob() {
+      if (!_confirmarSalvarComErros('Salvar/Exportar HTML')) return null;
       return new Blob([serializeHTML()], { type: 'text/html' });
     }
 
@@ -5080,6 +5421,7 @@
     function salvarComo() {
       if (!fsaSupported) { baixarCopia(); return; }
       var blob = makeBlob();
+      if (!blob) return;
       window.showSaveFilePicker({
         suggestedName: 'eventoie2026.html',
         types: [{ description: 'Arquivo HTML', accept: { 'text/html': ['.html'] } }]
@@ -5101,6 +5443,7 @@
       if (!fsaSupported) { baixarCopia(); return; }
       if (!fileHandle)   { salvarComo(); return; }
       var blob = makeBlob();
+      if (!blob) return;
       fileHandle.queryPermission({ mode: 'readwrite' }).then(function(perm) {
         if (perm === 'granted') return perm;
         return fileHandle.requestPermission({ mode: 'readwrite' });
@@ -5117,6 +5460,7 @@
 
     function baixarCopia() {
       var blob = makeBlob();
+      if (!blob) return;
       var a    = document.createElement('a');
       a.href     = URL.createObjectURL(blob);
       a.download = 'eventoie2026.html';
